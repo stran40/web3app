@@ -1,5 +1,6 @@
 var express = require("express");
 var app = express();
+var path = require("path");
 
 var HTTP_PORT = process.env.PORT || 8080;
 
@@ -15,7 +16,7 @@ app.get("/", function(req,res){
 
 // setup another route to listen on /about
 app.get("/about", function(req,res){
-   res.send("<h3>About</h3>");
+  res.sendFile(path.join(__dirname + "/views/about.html"));
 });
 app.use(express.static('public')); 
 // setup http server to listen on HTTP_PORT
