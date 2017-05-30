@@ -12,13 +12,18 @@
 var express = require("express");
 var app = express();
 var path = require("path");
+var employees = require('./data/employees.json');
+var fs = require("fs");
 
-var HTTP_PORT = process.env.PORT || 80;
+var HTTP_PORT = process.env.PORT || 7575;
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
   console.log("Express http server listening on: " + HTTP_PORT);
 }
+
+//setup static folder
+app.use(express.static("public")); 
 
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function(req,res){
@@ -32,18 +37,14 @@ app.get("/about", function(req,res){
 
 // setup route to listen on /employees
 app.get("/employees", function(req,res){
-  res.send(headers);
+  res.json(employees + req.query);
 });
-
 
 
 //Function to handle 404 requests to pages that are not found.
 app.use((req, res) => {
-  res.status(404).send("Page Not Found");
+  res.status(404).send("Oops! Page Not Found");
 });
-
-
-app.use(express.static('public')); 
 
 
 // setup http server to listen on HTTP_PORT
