@@ -13,7 +13,7 @@ var express = require("express");
 var app = express();
 var path = require("path");
 
-var HTTP_PORT = process.env.PORT || 8080;
+var HTTP_PORT = process.env.PORT || 80;
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
@@ -29,6 +29,22 @@ app.get("/", function(req,res){
 app.get("/about", function(req,res){
   res.sendFile(path.join(__dirname + "/views/about.html"));
 });
+
+// setup route to listen on /employees
+app.get("/employees", function(req,res){
+  res.send(headers);
+});
+
+
+
+//Function to handle 404 requests to pages that are not found.
+app.use((req, res) => {
+  res.status(404).send("Page Not Found");
+});
+
+
 app.use(express.static('public')); 
+
+
 // setup http server to listen on HTTP_PORT
 app.listen(HTTP_PORT, onHttpStart);
