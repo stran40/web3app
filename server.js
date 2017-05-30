@@ -1,10 +1,10 @@
 /*********************************************************************************
-* WEB322 – Assignment 02
+* WEB322 – Assignment 03
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
 * of this assignment has been copied manually or electronically from any other source
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: Stephanie Tran Student ID: 132233162 Date: May 24 2017
+* Name: Stephanie Tran Student ID: 132233162 Date: May 29 2017
 *
 * Online (Heroku) Link:https://polar-eyrie-23988.herokuapp.com/
 *
