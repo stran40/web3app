@@ -11,9 +11,9 @@
 ********************************************************************************/
 var express = require("express");
 var app = express();
-var path = require("path");
+var path 
+= require("path");
 var dataService = require("./data-service.js");
-var employees = require('./data/employees.json');
 var fs = require("fs");
 
 var HTTP_PORT = process.env.PORT || 8080;
@@ -37,16 +37,34 @@ app.get("/about", function(req,res){
 });
 
 // setup route to listen on /employees
-app.get("/employees", function(req,res){
-  res.json(employees + req.query);
+app.get("/employees", (req,res) => {
+  if(req.query.status){
+        res.json({message: req.query.status});
+    }else if(req.query.manager){
+        res.json({message: req.query.manager});
+    }else if(req.query.department){
+        res.json({message: req.query.department});
+    }else{
+        dataService.getMessage().then((dataMessage)=>{
+            res.json({message: dataMessage});
+        }).catch((errorMessage)=>{
+            res.json({message: errorMessage});
+        });
+        
+    }
 });
 
+app.get("/employee/:empNum", (req,res) => {
+    res.json({message: req.params.empNum});
+});
 
 //Function to handle 404 requests to pages that are not found.
 app.use((req, res) => {
   res.status(404).send("Page Not Found");
 });
 
-
+dataService.setMessage("Hello!").then(()=>{
+    app.listen(HTTP_PORT);
+});
 // setup http server to listen on HTTP_PORT
 app.listen(HTTP_PORT, onHttpStart);
