@@ -1,5 +1,6 @@
 var fs = require("fs");
 var workers = require('./workers.js');
+var departmentConstruct = require('./departConstruct.js');
 var employees = [];
 var departments = [];
 
@@ -54,23 +55,16 @@ function initialize(){
 
     function readDepartments(msg){
         // temp array of objects
-        var departObj = [];
+        var tempArray= [];
         return new Promise(function(resolve, reject){
                 fs.readFile('./data/departments.json', 'utf8', function(err, data) {
                 if (err) throw err;
                 obj = JSON.parse(data);
                 for (var i = 0; i < obj.length; i++){
-                    var person = new worker(obj[i].employeeNum, obj[i].firstName,
-                                                obj[i].last_name,obj[i].email,
-                                                obj[i].SSN,obj[i].addressStreet,
-                                                obj[i].addresCity,obj[i].addressState,
-                                                obj[i].addressPostal,obj[i].maritalStatus,
-                                                obj[i].isManager,obj[i].employeeManagerNum,
-                                                obj[i].status, obj[i].department,
-                                                obj[i].hireDate);
-                    employeeObj.push(person);
+                    var tempDepartObj = new departObj(obj[i].departmentId, obj[i].departmentName);
+                    tempArray.push(tempDepartObj);
             }
-            employees = employeeObj.slice();
+            departments = tempArray.slice();
                 console.log("Departments sucessfully read.");
                 resolve("read operation of departments complete.");
                 });
