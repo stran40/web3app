@@ -50,7 +50,6 @@ app.get("/employees", (req,res) => {
         }).catch((errorMessage)=>{
             res.json({message: errorMessage});
         });
-        
     }
 });
 

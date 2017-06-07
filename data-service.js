@@ -24,7 +24,10 @@ module.exports.getMessage = () => {
  * 
  * Function constructor for person object
  * --------------------------------*/
-function worker(){
+function worker(setNum, setFirstName,setLastName,setEmail,setSSN,
+                setAddressStreet,setAddressCity,setAddressState,
+                setAddressPostal,setMaritalStatus,setManager,
+                setEmployeeManagerNum,setStatus,setDepartment,setHireDate){
     this.employeeNum = setNum;
     this.firstName = setFirstName;
     this.lastName = setLastName;
@@ -67,17 +70,30 @@ worker.prototype.setHireDate  = function(newHireDate){this.hireDate = newHireDat
  * Assigns this array to employees array.
  * --------------------------------*/
 function initialize(){
+    // temp array of objects
+    var employeeObj = [];
     return new Promise(function(resolve, reject){
         fs.readFile('./data/employees.json', 'utf8', function(err, data) {
         if (err) throw err;
         obj = JSON.parse(data);
-        console.log(obj);
+        for (var i = 0; i < obj.length; i++){
+            var person = new worker(obj[i].employeeNum, obj[i].firstName,
+                                        obj[i].last_name,obj[i].email,
+                                        obj[i].SSN,obj[i].addressStreet,
+                                        obj[i].addresCity,obj[i].addressState,
+                                        obj[i].addressPostal,obj[i].maritalStatus,
+                                        obj[i].isManager,obj[i].employeeManagerNum,
+                                        obj[i].status, obj[i].department,
+                                        obj[i].hireDate);
+            employeeObj.push(person);
+    }
+     employees = employeeObj.slice();
         resolve("initialize() complete");
         });
     });
     
 };
-
+initialize();
 /*-----------------------------------
  * getAllEmployees();
  * 
