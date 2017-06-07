@@ -12,10 +12,11 @@
 var express = require("express");
 var app = express();
 var path = require("path");
+var dataService = require("./data-service.js");
 var employees = require('./data/employees.json');
 var fs = require("fs");
 
-var HTTP_PORT = process.env.PORT || 7575;
+var HTTP_PORT = process.env.PORT || 8080;
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
@@ -43,7 +44,7 @@ app.get("/employees", function(req,res){
 
 //Function to handle 404 requests to pages that are not found.
 app.use((req, res) => {
-  res.status(404).send("Oops! Page Not Found");
+  res.status(404).send("Page Not Found");
 });
 
 
