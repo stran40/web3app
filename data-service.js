@@ -86,56 +86,57 @@ departObj.prototype.setName = function(newName){this.departName = newName};
  * Assigns this array to employees array.
  * --------------------------------*/
 module.exports.initialize = () => {
-    function readEmployees(){
-        // temp array of objects
-        var employeeObj = [];
     return new Promise(function(resolve, reject){
-        fs.readFile('./data/employees.json', 'utf8', function(err, data) {
-        if (err) throw err;
-        obj = JSON.parse(data);
-        for (var i = 0; i < obj.length; i++){
-            var person = new worker(obj[i].employeeNum, obj[i].firstName,
-                                        obj[i].last_name,obj[i].email,
-                                        obj[i].SSN,obj[i].addressStreet,
-                                        obj[i].addresCity,obj[i].addressState,
-                                        obj[i].addressPostal,obj[i].maritalStatus,
-                                        obj[i].isManager,obj[i].employeeManagerNum,
-                                        obj[i].status, obj[i].department,
-                                        obj[i].hireDate);
-                    employeeObj.push(person);
-            }
-            employees = employeeObj.slice();
-            resolve("read operation of employees complete.");
-            });
-        });
-    }; // end of readEmployees()
-
-    function readDepartments(msg){
-        // temp array of objects
-        var tempArray= [];
+        function readEmployees(){
+            // temp array of objects
+            var employeeObj = [];
         return new Promise(function(resolve, reject){
-                fs.readFile('./data/departments.json', 'utf8', function(err, data) {
-                if (err) throw err;
-                obj = JSON.parse(data);
-                for (var i = 0; i < obj.length; i++){
-                    var tempDepartObj = new departObj(obj[i].departmentId, obj[i].departmentName);
-                    tempArray.push(tempDepartObj);
-            }
-            departments = tempArray.slice();
-                resolve(setMessage("read operation of departments complete."));
+            fs.readFile('./data/employees.json', 'utf8', function(err, data) {
+            if (err) throw err;
+            obj = JSON.parse(data);
+            for (var i = 0; i < obj.length; i++){
+                var person = new worker(obj[i].employeeNum, obj[i].firstName,
+                                            obj[i].last_name,obj[i].email,
+                                            obj[i].SSN,obj[i].addressStreet,
+                                            obj[i].addresCity,obj[i].addressState,
+                                            obj[i].addressPostal,obj[i].maritalStatus,
+                                            obj[i].isManager,obj[i].employeeManagerNum,
+                                            obj[i].status, obj[i].department,
+                                            obj[i].hireDate);
+                        employeeObj.push(person);
+                }
+                employees = employeeObj.slice();
+                resolve("read operation of employees complete.");
+                });
             });
+        }; // end of readEmployees()
+
+        function readDepartments(msg){
+            // temp array of objects
+            var tempArray= [];
+            return new Promise(function(resolve, reject){
+                    fs.readFile('./data/departments.json', 'utf8', function(err, data) {
+                    if (err) throw err;
+                    obj = JSON.parse(data);
+                    for (var i = 0; i < obj.length; i++){
+                        var tempDepartObj = new departObj(obj[i].departmentId, obj[i].departmentName);
+                        tempArray.push(tempDepartObj);
+                }
+                departments = tempArray.slice();
+                    resolve("read operation of departments complete.");
+                });
+            });
+        } // end of readDepartments();
+
+        // invoke functions in order
+        readEmployees()
+        .then(readDepartments)
+        .catch(function(rejectMsg){
+            // catch errors here
+            console.log(rejectMsg);
         });
-    } // end of readDepartments();
-
-    // invoke functions in order
-    readEmployees()
-    .then(readDepartments)
-    .then(getAllEmployees)
-    .catch(function(rejectMsg){
-        // catch errors here
-        console.log(rejectMsg);
+    resolve(employees, departments);
     });
-
 }; // end of initialize();
 
 /*-----------------------------------
@@ -156,7 +157,7 @@ module.exports.getAllEmployees = (msg) => {
  * getEmployeesByStatus(status);
  * 
  * --------------------------------*/
-modules.exports.getEmployeesByStatus = (status) => {
+module.exports.getEmployeesByStatus = (status) => {
     return new Promise(function(resolve, reject){
         if(employees.length > 0){
             resolve(employees);

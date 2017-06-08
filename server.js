@@ -61,6 +61,11 @@ app.use((req, res) => {
   res.status(404).send("Page Not Found");
 });
 
-app.listen(HTTP_PORT, onHttpStart);
 
-dataService.initialize();
+dataService.initialize()
+.then(console.log("initialize done."))
+.then(app.listen(HTTP_PORT, onHttpStart))
+.catch(function(rejectMsg){
+    // catch any errors here
+    console.log(rejectMsg);
+});
