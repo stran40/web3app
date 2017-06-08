@@ -52,6 +52,11 @@ app.get("/employees", (req,res) => {
     }
 });
 
+// setup route to listen on /departments
+app.get("/departments", (req,res) => {
+
+});
+
 app.get("/employee/:empNum", (req,res) => {
     res.json({message: req.params.empNum});
 });
@@ -63,6 +68,7 @@ app.use((req, res) => {
 
 
 dataService.initialize()
+.then(dataService.getEmployeesByStatus("Full Time"))
 .then(console.log("initialize done."))
 .then(app.listen(HTTP_PORT, onHttpStart))
 .catch(function(rejectMsg){

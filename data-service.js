@@ -1,6 +1,6 @@
 var fs = require("fs");
-var employees = [];
-var departments = [];
+module.exports.employees = [];
+module.exports.departments = [];
 
 module.exports.setMessage = (msg) => {
     return new Promise((resolve, reject)=>{
@@ -107,6 +107,7 @@ module.exports.initialize = () => {
                 }
                 employees = employeeObj.slice();
                 resolve("read operation of employees complete.");
+                console.log("read employees[] done: " + employees[1].lastName);
                 });
             });
         }; // end of readEmployees()
@@ -123,6 +124,7 @@ module.exports.initialize = () => {
                         tempArray.push(tempDepartObj);
                 }
                 departments = tempArray.slice();
+            
                     resolve("read operation of departments complete.");
                 });
             });
@@ -135,13 +137,14 @@ module.exports.initialize = () => {
             // catch errors here
             console.log(rejectMsg);
         });
+    console.log("employees[] done: " + employees[1].lastName);
+    console.log("Departments[]: " + JSON.stringify(departments[1]));
     resolve(employees, departments);
     });
 }; // end of initialize();
 
 /*-----------------------------------
  * getAllEmployees();
- * 
  * --------------------------------*/
 module.exports.getAllEmployees = (msg) => {
     return new Promise(function(resolve, reject){
@@ -155,24 +158,21 @@ module.exports.getAllEmployees = (msg) => {
 
 /*-----------------------------------
  * getEmployeesByStatus(status);
- * 
  * --------------------------------*/
 module.exports.getEmployeesByStatus = (status) => {
+    // create variable to hold matches
+    var matches = [];
     return new Promise(function(resolve, reject){
         if(employees.length > 0){
-            resolve(employees);
+            for (var i = 0; i < employees.length; i++ ){
+                if (status == employees[i].status){
+                    matches.push(employees[i]);
+                }
+            }
+            resolve(matches);
         }else{
             reject("No results returned from getEmployeesByStatus();");
         }
     });
 
 };
-
-/*
-initialize()
-.then(getAllEmployees)
-.catch(function(rejectMsg){
-        // catch errors here
-        console.log(rejectMsg);
-    });
-    */
