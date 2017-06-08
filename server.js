@@ -11,8 +11,7 @@
 ********************************************************************************/
 var express = require("express");
 var app = express();
-var path 
-= require("path");
+var path = require("path");
 var dataService = require("./data-service.js");
 var fs = require("fs");
 
@@ -62,8 +61,6 @@ app.use((req, res) => {
   res.status(404).send("Page Not Found");
 });
 
-dataService.setMessage("Hello!").then(()=>{
-    app.listen(HTTP_PORT);
-});
-// setup http server to listen on HTTP_PORT
 app.listen(HTTP_PORT, onHttpStart);
+
+dataService.initialize();

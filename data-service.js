@@ -85,7 +85,7 @@ departObj.prototype.setName = function(newName){this.departName = newName};
  * Converts file's contents into array of objects.
  * Assigns this array to employees array.
  * --------------------------------*/
-function initialize(){
+module.exports.initialize = () => {
     function readEmployees(){
         // temp array of objects
         var employeeObj = [];
@@ -105,10 +105,10 @@ function initialize(){
                     employeeObj.push(person);
             }
             employees = employeeObj.slice();
-                resolve("read operation of employees complete.");
-                });
+            resolve("read operation of employees complete.");
             });
-        }; // end of readEmployees()
+        });
+    }; // end of readEmployees()
 
     function readDepartments(msg){
         // temp array of objects
@@ -122,29 +122,33 @@ function initialize(){
                     tempArray.push(tempDepartObj);
             }
             departments = tempArray.slice();
-                console.log("Departments sucessfully read.");
-                resolve("read operation of departments complete.");
-                });
+                resolve(setMessage("read operation of departments complete."));
             });
+        });
     } // end of readDepartments();
 
     // invoke functions in order
     readEmployees()
     .then(readDepartments)
+    .then(getAllEmployees)
     .catch(function(rejectMsg){
         // catch errors here
         console.log(rejectMsg);
     });
 
 }; // end of initialize();
-initialize();
+
 /*-----------------------------------
  * getAllEmployees();
  * 
  * --------------------------------*/
-function getAllEmployees(msg){
-    return new Promose(function(resolve, reject){
-        resolve("getAllEmployees() complete.");
+module.exports.getAllEmployees = (msg) => {
+    return new Promise(function(resolve, reject){
+        if(employees.length > 0){
+            resolve(employees);
+        }else{
+            reject("No results returned from getAllEmployees();");
+        }
     });
 };
 
@@ -152,8 +156,14 @@ function getAllEmployees(msg){
  * getEmployeesByStatus(status);
  * 
  * --------------------------------*/
-function getEmployeesByStatus(status){
-
+modules.exports.getEmployeesByStatus = (status) => {
+    return new Promise(function(resolve, reject){
+        if(employees.length > 0){
+            resolve(employees);
+        }else{
+            reject("No results returned from getEmployeesByStatus();");
+        }
+    });
 
 };
 
@@ -161,8 +171,7 @@ function getEmployeesByStatus(status){
 initialize()
 .then(getAllEmployees)
 .catch(function(rejectMsg){
-    // catch errors here
-    console.log(rejectMsg);
-});
-
-*/
+        // catch errors here
+        console.log(rejectMsg);
+    });
+    */
