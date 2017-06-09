@@ -42,8 +42,9 @@ app.get("/about", function (req, res) {
 app.get("/employees", (req, res) => {
     if (req.query.status) {
         res.json({
-            message: req.query.status
+            message: dataService.getEmployeesByStatus(req.query.status)
         });
+        console.log("STATUS: " + req.query.status);
     } else if (req.query.manager) {
         res.json({
             message: req.query.manager
@@ -91,7 +92,7 @@ dataService.initialize()
         app.listen(HTTP_PORT, onHttpStart)
     })
     .then(() => {
-       
+     
     })
     .catch(function (rejectMsg) {
         // catch any errors here

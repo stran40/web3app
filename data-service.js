@@ -115,7 +115,6 @@ departObj.prototype.setName = function (newName) {
 };
 
 function readEmployees() {
-    console.log(test("2. readEmployees() starts."));
     return new Promise(function (resolve, reject) {
         fs.readFile('./data/employees.json', 'utf8', function (err, data) {
             if (err) throw err;
@@ -137,7 +136,6 @@ function readEmployees() {
 }; // end of readEmployees()
 
 function readDepartments(msg) {
-    console.log(test("3. (116) readDepartments starts."));
     var tempArray = [];
     return new Promise(function (resolve, reject) {
         fs.readFile('./data/departments.json', 'utf8', function (err, data) {
@@ -160,7 +158,6 @@ function readDepartments(msg) {
  * Assigns this array to employees array.
  * --------------------------------*/
 initialize = () => {
-    console.log(test("1. (132) initialize() starts."));
     return new Promise(function (resolve, reject) {
         // invoke functions in order
         readEmployees()
