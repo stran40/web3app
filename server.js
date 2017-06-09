@@ -14,12 +14,15 @@ var app = express();
 var path = require("path");
 var dataService = require("./data-service.js");
 var fs = require("fs");
+var chalk = require("chalk");
+var test = chalk.cyan;
+var test2 = chalk.yellow;
 
 var HTTP_PORT = process.env.PORT || 8080;
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
-  console.log("Express http server listening on: " + HTTP_PORT);
+  console.log("Express http server listening on: " + HTTP_PORT + "\n" );
 }
 
 //setup static folder
@@ -38,6 +41,7 @@ app.get("/about", function(req,res){
 // setup route to listen on /employees
 app.get("/employees", (req,res) => {
   if(req.query.status){
+      res.header("Content-Type", "application/json; charset=utf-8");
         res.json({message: req.query.status});
     }else if(req.query.manager){
         res.json({message: req.query.manager});
@@ -54,7 +58,8 @@ app.get("/employees", (req,res) => {
 
 // setup route to listen on /departments
 app.get("/departments", (req,res) => {
-
+    res.header("Content-Type", "application/json; charset=utf-8");
+    res.json({message: dataService.getDepartments});
 });
 
 app.get("/employee/:empNum", (req,res) => {
@@ -66,11 +71,14 @@ app.use((req, res) => {
   res.status(404).send("Page Not Found");
 });
 
-
+console.log("===== START ======\n")
 dataService.initialize()
-.then(dataService.getEmployeesByStatus("Full Time"))
-.then(console.log("initialize done."))
-.then(app.listen(HTTP_PORT, onHttpStart))
+.then(console.log(test("\n** initialize() complete ***\n")))
+.then(() => {app.listen(HTTP_PORT, onHttpStart)})
+.then(() => {
+    console.log(test2("Running departments(); : "));
+    dataService.getDepartments();
+})
 .catch(function(rejectMsg){
     // catch any errors here
     console.log(rejectMsg);

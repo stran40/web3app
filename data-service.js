@@ -1,6 +1,7 @@
 var fs = require("fs");
-module.exports.employees = [];
-module.exports.departments = [];
+var chalk = require("chalk");
+var test = chalk.cyan;
+var test2 = chalk.yellow;
 
 module.exports.setMessage = (msg) => {
     return new Promise((resolve, reject)=>{
@@ -18,7 +19,6 @@ module.exports.getMessage = () => {
         }
     });
 }
-
 /*-----------------------------------
  * worker();
  * 
@@ -86,8 +86,13 @@ departObj.prototype.setName = function(newName){this.departName = newName};
  * Assigns this array to employees array.
  * --------------------------------*/
 module.exports.initialize = () => {
+employees = [];
+departments = [];
+console.log(test("1. (91) initialize();"));
+
     return new Promise(function(resolve, reject){
         function readEmployees(){
+            console.log(test("2. (95). readEmployees();"));
             // temp array of objects
             var employeeObj = [];
         return new Promise(function(resolve, reject){
@@ -106,13 +111,13 @@ module.exports.initialize = () => {
                         employeeObj.push(person);
                 }
                 employees = employeeObj.slice();
-                resolve("read operation of employees complete.");
-                console.log("read employees[] done: " + employees[1].lastName);
+                resolve(employees);
                 });
             });
         }; // end of readEmployees()
 
         function readDepartments(msg){
+            console.log(test("3. (121) readDepartments();"));
             // temp array of objects
             var tempArray= [];
             return new Promise(function(resolve, reject){
@@ -125,11 +130,10 @@ module.exports.initialize = () => {
                 }
                 departments = tempArray.slice();
             
-                    resolve("read operation of departments complete.");
+                    resolve(departments);
                 });
             });
         } // end of readDepartments();
-
         // invoke functions in order
         readEmployees()
         .then(readDepartments)
@@ -137,9 +141,8 @@ module.exports.initialize = () => {
             // catch errors here
             console.log(rejectMsg);
         });
-    console.log("employees[] done: " + employees[1].lastName);
-    console.log("Departments[]: " + JSON.stringify(departments[1]));
-    resolve(employees, departments);
+   resolve(employees, departments);
+    
     });
 }; // end of initialize();
 
@@ -170,6 +173,27 @@ module.exports.getEmployeesByStatus = (status) => {
                 }
             }
             resolve(matches);
+        }else{
+            reject("No results returned from getEmployeesByStatus();");
+        }
+    });
+
+};
+
+/*-----------------------------------
+ * getDepartments()
+ * --------------------------------*/
+module.exports.getDepartments = () => {
+    // create variable to hold matches
+    var matches = [];
+    return new Promise(function(resolve, reject){
+        if(employees.length > 0){
+            for (var i = 0; i < employees.length; i++ ){
+               matches[i].push(departments[i]);
+            }
+            console.log("194 --- " + test(JSON.stringify(matches)));
+            resolve(JSON.stringify(matches));
+
         }else{
             reject("No results returned from getEmployeesByStatus();");
         }
