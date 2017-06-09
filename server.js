@@ -9,16 +9,16 @@
 * Online (Heroku) Link:https://polar-eyrie-23988.herokuapp.com/
 *
 ********************************************************************************/
-var express = require("express");
-var app = express();
-var path = require("path");
-var dataService = require("./data-service.js");
-var fs = require("fs");
-var chalk = require("chalk");
+const express = require("express");
+const app = express();
+const path = require("path");
+const dataService = require("./data-service.js");
+const fs = require("fs");
+const chalk = require("chalk");
 var test = chalk.cyan;
 var test2 = chalk.yellow;
 
-var HTTP_PORT = process.env.PORT || 8080;
+const HTTP_PORT = process.env.PORT || 8080;
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
@@ -76,7 +76,7 @@ dataService.initialize()
 .then(console.log(test("\n** initialize() complete ***\n")))
 .then(() => {app.listen(HTTP_PORT, onHttpStart)})
 .then(() => {
-    console.log(test2("Running departments(); : "));
+    console.log(test2("(server.js 79) Running departments(); : "));
     dataService.getDepartments();
 })
 .catch(function(rejectMsg){

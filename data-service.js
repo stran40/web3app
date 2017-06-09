@@ -1,7 +1,12 @@
-var fs = require("fs");
-var chalk = require("chalk");
+const fs = require("fs");
+const chalk = require("chalk");
 var test = chalk.cyan;
 var test2 = chalk.yellow;
+const employees = [];
+const departments = [];
+
+// module.exports.employees = [];
+// module.exports.departments = [];
 
 module.exports.setMessage = (msg) => {
     return new Promise((resolve, reject)=>{
@@ -86,15 +91,11 @@ departObj.prototype.setName = function(newName){this.departName = newName};
  * Assigns this array to employees array.
  * --------------------------------*/
 module.exports.initialize = () => {
-employees = [];
-departments = [];
 console.log(test("1. (91) initialize();"));
 
     return new Promise(function(resolve, reject){
         function readEmployees(){
             console.log(test("2. (95). readEmployees();"));
-            // temp array of objects
-            var employeeObj = [];
         return new Promise(function(resolve, reject){
             fs.readFile('./data/employees.json', 'utf8', function(err, data) {
             if (err) throw err;
@@ -108,17 +109,15 @@ console.log(test("1. (91) initialize();"));
                                             obj[i].isManager,obj[i].employeeManagerNum,
                                             obj[i].status, obj[i].department,
                                             obj[i].hireDate);
-                        employeeObj.push(person);
+                        employees.push(person);
                 }
-                employees = employeeObj.slice();
-                resolve(employees);
+                resolve();
                 });
             });
         }; // end of readEmployees()
 
         function readDepartments(msg){
             console.log(test("3. (121) readDepartments();"));
-            // temp array of objects
             var tempArray= [];
             return new Promise(function(resolve, reject){
                     fs.readFile('./data/departments.json', 'utf8', function(err, data) {
@@ -126,10 +125,8 @@ console.log(test("1. (91) initialize();"));
                     obj = JSON.parse(data);
                     for (var i = 0; i < obj.length; i++){
                         var tempDepartObj = new departObj(obj[i].departmentId, obj[i].departmentName);
-                        tempArray.push(tempDepartObj);
+                        departments.push(tempDepartObj);
                 }
-                departments = tempArray.slice();
-            
                     resolve(departments);
                 });
             });
@@ -141,7 +138,7 @@ console.log(test("1. (91) initialize();"));
             // catch errors here
             console.log(rejectMsg);
         });
-   resolve(employees, departments);
+   resolve();
     
     });
 }; // end of initialize();
@@ -187,7 +184,7 @@ module.exports.getDepartments = () => {
     // create variable to hold matches
     var matches = [];
     return new Promise(function(resolve, reject){
-        if(employees.length > 0){
+        if(departments.length > 0){
             for (var i = 0; i < employees.length; i++ ){
                matches[i].push(departments[i]);
             }
