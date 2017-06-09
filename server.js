@@ -41,10 +41,9 @@ app.get("/about", function (req, res) {
 // setup route to listen on /employees
 app.get("/employees", (req, res) => {
     if (req.query.status) {
-        res.json({
-            message: dataService.getEmployeesByStatus(req.query.status)
-        });
-        console.log("STATUS: " + req.query.status);
+        var match = dataService.getEmployeesByStatus(req.query.status).then((data)=>{
+            res.json(data);
+        }); 
     } else if (req.query.manager) {
         res.json({
             message: req.query.manager
@@ -84,15 +83,18 @@ app.use((req, res) => {
     res.status(404).send("Page Not Found");
 });
 
-// Testing 
-console.log(chalk.bgMagenta("\n=================== START ========================\n=================================================="));
+// put app.listen in function listen();
+listen = () => { 
+    return new Promise(function (resolve, reject) {
+        app.listen(HTTP_PORT, onHttpStart);
+        resolve;
+    })
+ };
 
 dataService.initialize()
+    .then(listen)
     .then(() => {
-        app.listen(HTTP_PORT, onHttpStart)
-    })
-    .then(() => {
-     
+       console.log(chalk.bgMagenta("\n=================== START ========================\n=================================================="));
     })
     .catch(function (rejectMsg) {
         // catch any errors here
