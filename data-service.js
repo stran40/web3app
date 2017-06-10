@@ -209,19 +209,95 @@ getEmployeesByStatus = (status) => {
 };
 
 /*-----------------------------------
+ * getEmployeesByDepartment(department)
+ * --------------------------------*/
+getEmployeesByDepartment = (department) => {
+    // create variable to hold matches
+    var matches = [];
+    return new Promise(function (resolve, reject) {
+        if (employees.length > 0) {
+            for (var i = 0; i < employees.length; i++) {
+                if (department == employees[i].department) {
+                    matches.push(employees[i]);
+                }
+            }
+            resolve(matches);
+        } else {
+            reject("\nNo results returned from getEmployeesByDepartment();");
+        }
+    });
+};
+
+/*-----------------------------------
+ * getEmployeesByManager(manager)
+ * --------------------------------*/
+getEmployeesByManager = (manager) => {
+    // create variable to hold matches
+    var matches = [];
+    return new Promise(function (resolve, reject) {
+        if (employees.length > 0) {
+            for (var i = 0; i < employees.length; i++) {
+                if (manager == employees[i].employeeManagerNum) {
+                    matches.push(employees[i]);
+                }
+            }
+            resolve(matches);
+        } else {
+            reject("\nNo results returned from getEmployeesByManager();");
+        }
+    });
+};
+/*-----------------------------------
+ * getEmployeeByNum(num)
+ * --------------------------------*/
+getEmployeeByNum = (num) => {
+    // create variable to hold matches
+    var matches = [];
+    return new Promise(function (resolve, reject) {
+        if (employees.length > 0) {
+            for (var i = 0; i < employees.length; i++) {
+                if (num == employees[i].employeeNum) {
+                    matches.push(employees[i]);
+                }
+            }
+            resolve(matches);
+        } else {
+            reject("\nNo results returned from getEmployeesByNum();");
+        }
+    });
+};
+
+/*-----------------------------------
+ * getManagers()
+ * --------------------------------*/
+getManagers = () => {
+    // create variable to hold matches
+    var matches = [];
+    return new Promise(function (resolve, reject) {
+        if (employees.length > 0) {
+            for (var i = 0; i < employees.length; i++) {
+                if (employees[i].isManager ) {
+                    matches.push(employees[i]);
+                }
+            }
+            resolve(matches);
+        } else {
+            reject("\nNo results returned from getManagers();");
+        }
+    });
+};
+
+/*-----------------------------------
  * getDepartments()
  * --------------------------------*/
 getDepartments = () => {
     // create variable to hold matches
     var matches = [];
-    console.log(test("(184) getDepartments() : " + JSON.stringify(departments[1])));
-
     return new Promise(function (resolve, reject) {
         if (departments.length > 0) {
             for (var i = 0; i < departments.length; i++) {
-                matches[i].push(departments[i]);
+                matches.push(departments[i]);
             }
-            console.log("194 --- " + test(JSON.stringify(matches)));
             resolve(matches);
 
         } else {
@@ -237,5 +313,9 @@ module.exports = {
     getMessage: getMessage,
     getAllEmployees: getAllEmployees,
     getEmployeesByStatus: getEmployeesByStatus,
+    getEmployeesByDepartment: getEmployeesByDepartment,
+    getEmployeesByManager: getEmployeesByManager,
+    getEmployeeByNum: getEmployeeByNum,
+    getManagers: getManagers,
     getDepartments: getDepartments
 }

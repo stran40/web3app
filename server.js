@@ -40,36 +40,44 @@ app.get("/about", function (req, res) {
 
 // setup route to listen on /employees
 app.get("/employees", (req, res) => {
+    res.sendFile(path.join(__dirname + "/public/css/site.cc"));
     if (req.query.status) {
-        var match = dataService.getEmployeesByStatus(req.query.status).then((data)=>{
+       dataService.getEmployeesByStatus(req.query.status).then((data)=>{
             res.json(data);
         }); 
     } else if (req.query.manager) {
-        res.json({
-            message: req.query.manager
-        });
+         dataService.getEmployeesByManager(req.query.manager).then((data)=>{
+            res.json(data);
+        }); 
     } else if (req.query.department) {
-        res.json({
-            message: req.query.department
-        });
-    } else {
-        dataService.getMessage().then((dataMessage) => {
-            res.json({
-                message: dataMessage
+         dataService.getEmployeesByDepartment(req.query.department).then((data)=>{
+            res.json(data);
+        }); 
+    }  else {
+        dataService.getAllEmployees().then((data) => {
+            res.json(data);
             });
-        }).catch((errorMessage) => {
-            res.json({
-                message: errorMessage
-            });
-        });
     }
+});
+
+app.get('/employee/:id', function(req, res) {
+         dataService.getEmployeeByNum(req.params.id).then((data)=>{
+            res.json(data);
+        }); 
+});
+
+// setup route to listen on /managers
+app.get("/managers", (req, res) => {
+     dataService.getManagers().then((data)=>{
+            res.json(data);
+        }); 
 });
 
 // setup route to listen on /departments
 app.get("/departments", (req, res) => {
-    res.json({
-        message: dataService.getDepartments
-    });
+   dataService.getDepartments().then((data)=>{
+            res.json(data);
+        }); 
 });
 
 app.get("/employee/:empNum", (req, res) => {
@@ -80,7 +88,7 @@ app.get("/employee/:empNum", (req, res) => {
 
 //Function to handle 404 requests to pages that are not found.
 app.use((req, res) => {
-    res.status(404).send("Page Not Found");
+    res.status(404).send("Page Not Found!");
 });
 
 // put app.listen in function listen();
@@ -93,9 +101,6 @@ listen = () => {
 
 dataService.initialize()
     .then(listen)
-    .then(() => {
-       console.log(chalk.bgMagenta("\n=================== START ========================\n=================================================="));
-    })
     .catch(function (rejectMsg) {
         // catch any errors here
         console.log(rejectMsg);
