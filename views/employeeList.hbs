@@ -23,14 +23,14 @@ New Employee</a>
                 <tbody>
                     {{#each data}}  <!-- create new row for each employee -->
                     <tr colspan="8">
-                        <td></td>
+                        <td> {{employeeNum}} </td>
                         <td>{{firstName}} {{lastName}}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{email}}</td>
+                        <td>{{addressStreet}}{{addressCity}}, {{addressState}}. {{addressPostal}}</td>
+                        <td>{{employeeManagerNum}}</td>
+                        <td>{{status}}</td>
+                        <td>{{department}}</td>
+                        <td>{{hireDate}}</td>
                     </tr>
                     {{/each}}
                 </tbody>
