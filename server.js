@@ -30,60 +30,88 @@ app.use(express.static("public"));
 
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname + "/views/home.html"));
+    try { 
+        res.sendFile(path.join(__dirname + "/views/home.html"));
+    }catch(rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
 });
 
 // setup another route to listen on /about
 app.get("/about", function (req, res) {
-    res.sendFile(path.join(__dirname + "/views/about.html"));
+    try { 
+        res.sendFile(path.join(__dirname + "/views/about.html"));
+    }catch(rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
 });
 
 // setup route to listen on /employees
 app.get("/employees", (req, res) => {
-    res.sendFile(path.join(__dirname + "/public/css/site.cc"));
-    if (req.query.status) {
-       dataService.getEmployeesByStatus(req.query.status).then((data)=>{
-            res.json(data);
-        }); 
-    } else if (req.query.manager) {
-         dataService.getEmployeesByManager(req.query.manager).then((data)=>{
-            res.json(data);
-        }); 
-    } else if (req.query.department) {
-         dataService.getEmployeesByDepartment(req.query.department).then((data)=>{
-            res.json(data);
-        }); 
-    }  else {
-        dataService.getAllEmployees().then((data) => {
-            res.json(data);
-            });
-    }
+    try { 
+            res.sendFile(path.join(__dirname + "/public/css/site.cc"));
+        if (req.query.status) {
+        dataService.getEmployeesByStatus(req.query.status).then((data)=>{
+                res.json(data);
+            }); 
+        } else if (req.query.manager) {
+            dataService.getEmployeesByManager(req.query.manager).then((data)=>{
+                res.json(data);
+            }); 
+        } else if (req.query.department) {
+            dataService.getEmployeesByDepartment(req.query.department).then((data)=>{
+                res.json(data);
+            }); 
+        }  else {
+            dataService.getAllEmployees().then((data) => {
+                res.json(data);
+                });
+        }
+    }catch(rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
 });
 
 app.get('/employee/:id', function(req, res) {
+    try {
          dataService.getEmployeeByNum(req.params.id).then((data)=>{
             res.json(data);
-        }); 
+        })}catch(rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
 });
 
 // setup route to listen on /managers
 app.get("/managers", (req, res) => {
-     dataService.getManagers().then((data)=>{
+     try{dataService.getManagers().then((data)=>{
             res.json(data);
-        }); 
+        })}catch(rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    }; 
 });
 
 // setup route to listen on /departments
 app.get("/departments", (req, res) => {
-   dataService.getDepartments().then((data)=>{
+   try{dataService.getDepartments().then((data)=>{
             res.json(data);
-        }); 
+        })}catch(rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
 });
 
 app.get("/employee/:empNum", (req, res) => {
-    res.json({
+    try{res.json({
         message: req.params.empNum
-    });
+    })}catch(rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
 });
 
 //Function to handle 404 requests to pages that are not found.
