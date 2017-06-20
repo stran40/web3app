@@ -51,7 +51,7 @@ app.get("/about", function (req, res) {
 // setup route to listen on /employees
 app.get("/employees", (req, res) => {
     try { 
-            res.sendFile(path.join(__dirname + "/public/css/site.cc"));
+            res.sendFile(path.join(__dirname + "/public/css/site.css"));
         if (req.query.status) {
         dataService.getEmployeesByStatus(req.query.status).then((data)=>{
                 res.json(data);
