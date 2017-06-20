@@ -80,15 +80,24 @@ app.get("/employees", (req, res) => {
     try {
         if (req.query.status) {
             dataService.getEmployeesByStatus(req.query.status).then((data) => {
-                res.json(data);
+               res.render("employeeList", {
+                    data: data,
+                    title: "Employees"
+                });
             });
         } else if (req.query.manager) {
             dataService.getEmployeesByManager(req.query.manager).then((data) => {
-                res.json(data);
+                res.render("employeeList", {
+                    data: data,
+                    title: "Employees"
+                });
             });
         } else if (req.query.department) {
             dataService.getEmployeesByDepartment(req.query.department).then((data) => {
-                res.json(data);
+                res.render("employeeList", {
+                    data: data,
+                    title: "Employees"
+                });
             });
         } else {
             dataService.getAllEmployees().then((data) => {
@@ -107,10 +116,13 @@ app.get("/employees", (req, res) => {
     };
 });
 
-app.get('/employee/:id', function (req, res) {
+app.get('/employees/:id', function (req, res) {
     try {
         dataService.getEmployeeByNum(req.params.id).then((data) => {
-            res.json(data);
+            res.render("employeeList", {
+                    data: data,
+                    title: "Employees"
+                });
         })
     } catch (rejectMsg) {
         // catch any errors here
@@ -148,9 +160,10 @@ app.get("/departments", (req, res) => {
 
 app.get("/employee/:empNum", (req, res) => {
     try {
-        res.json({
-            message: req.params.empNum
-        })
+        res.render("employeeList", {
+                    data: data,
+                    title: "Employees"
+                });
     } catch (rejectMsg) {
         // catch any errors here
         console.log(rejectMsg);
