@@ -116,6 +116,20 @@ app.get("/employees", (req, res) => {
     };
 });
 
+// add employees route
+app.get('/employees/add', function (req, res) {
+    try {
+        res.render("addEmployee");
+    } catch (rejectMsg) {
+        res.render("addEmployee", { title: "Add Employee" });
+    };
+});
+
+app.post("/employees/add", (req, res) => {
+ console.log(req.body);
+ res.redirect("/employees");
+});
+
 app.get('/employees/:id', function (req, res) {
     try {
         dataService.getEmployeeByNum(req.params.id).then((data) => {

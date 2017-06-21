@@ -16,8 +16,16 @@
                 <tbody>
                 {{#each data}} 
                     <tr colspan="2">
-                        <td>{{departID}}</td>
-                        <td>{{departName}}</td>
+                        <td>
+                            <a href="/employees?department={{departID}}">
+                                {{departID}}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/employees?department={{departID}}">
+                                {{departName}}
+                            </a>
+                        </td>
                     </tr>
                 {{/each}}
                 </tbody>
