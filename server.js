@@ -126,22 +126,45 @@ app.get('/employees/add', function (req, res) {
 });
 
 app.post("/employees/add", (req, res) => {
- console.log(req.body);
- res.redirect("/employees");
+ try{
+    dataService.addEmployee(req.body).then(() => {
+    res.redirect("/employees")});
+ }
+ catch (rejectMsg) {
+        res.status(404).send("Could not add employee."); 
+    };
 });
 
 app.get('/employees/:id', function (req, res) {
     try {
         dataService.getEmployeeByNum(req.params.id).then((data) => {
-            res.render("employeeList", {
-                    data: data,
-                    title: "Employees"
-                });
+            res.render("employee", {
+                    data: data});
         })
+    } catch (rejectMsg) {
+        res.status(404).send("Employee Not Found"); 
+    };
+});
+app.get("/employee/:empNum", (req, res) => {
+    try {
+        res.render("employee", {
+                    data: data});
     } catch (rejectMsg) {
         // catch any errors here
         console.log(rejectMsg);
     };
+});
+
+app.post("/employee/update", (req, res) => {
+    try{
+    dataService.updateEmployee(req.body).then(() => {
+        res.redirect("/employees")}
+    );
+    }
+    catch (rejectMsg) {
+            // catch any errors here
+            console.log(rejectMsg);
+        };
 });
 
 // setup route to listen on /managers
@@ -169,18 +192,6 @@ app.get("/departments", (req, res) => {
         })
     } catch (rejectMsg) {
        res.render("departmentList", { data: {}, title: "Departments" });
-    };
-});
-
-app.get("/employee/:empNum", (req, res) => {
-    try {
-        res.render("employeeList", {
-                    data: data,
-                    title: "Employees"
-                });
-    } catch (rejectMsg) {
-        // catch any errors here
-        console.log(rejectMsg);
     };
 });
 

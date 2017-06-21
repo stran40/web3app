@@ -5,6 +5,7 @@ var test2 = chalk.yellow;
 var error = chalk.red.bold;
 
 var employees = [];
+var empCount = 0;
 var departments = [];
 
 setMessage = (msg) => {
@@ -163,6 +164,9 @@ initialize = () => {
         readEmployees()
             .then(readDepartments)
             .then(() => {
+                empCount = employees.length;
+            })
+            .then(() => {
                 resolve();
             })
             .catch(function (rejectMsg) {
@@ -307,6 +311,37 @@ getDepartments = () => {
 
 };
 
+/*-----------------------------------
+ *  addEmployee(employeeData);
+ * --------------------------------*/
+ addEmployee = (employeeData) => {
+     return new Promise(function (resolve, reject) {
+        empCount++;
+        employeeData.employeeNum = empCount;
+        // add new employeeData obj to employees array
+        employees.push(employeeData);
+        resolve();
+     });
+ };
+
+/*-----------------------------------
+ *  updateEmployee(employeeData) 
+ * --------------------------------*/
+updateEmployee = (employeeData) => {
+    return new Promise(function (resolve, reject) {
+        console.log("updateEmployee called.");
+        console.log("Employee being updated: " + JSON.stringify(employeeData) );
+       // search employees array
+       for ( var i = 0; i < employees.length; i++  ) {
+            if ( employees[i].employeeNum = employeeData.employeeNum ){
+                console.log("Match found: " + employees[i].employeeNum + " = " + employeeData.employeeNum );
+                employees[i] = employeeData; // match found. Overwrite object with new data
+            }
+       }
+        resolve();
+     });
+};
+
 module.exports = {
     initialize: initialize,
     setMessage: setMessage,
@@ -317,5 +352,7 @@ module.exports = {
     getEmployeesByManager: getEmployeesByManager,
     getEmployeeByNum: getEmployeeByNum,
     getManagers: getManagers,
-    getDepartments: getDepartments
+    getDepartments: getDepartments,
+    addEmployee : addEmployee,
+    updateEmployee : updateEmployee
 }
