@@ -35,7 +35,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="ssn">Social Security Num:</label>
-                                <input class="form-control" id="ssn" name="ssn" type="text" value="{{ssn}}" />
+                                <input class="form-control" id="ssn" name="ssn" type="text" value="{{ssn}}" disabled/>
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="isManager">Manager:</label>
-                                <input class="form-control" type="checkbox" id="isManager" name="isManager"  value="{{isManager}}" />
+                                <input class="form-control" type="checkbox" id="isManager" name="isManager"  value="{{isManager}}"
+                                {{#if isManager}} checked="checked" {{/if}} />
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -89,7 +90,8 @@
                                 <label for="status">Status:</label>
                                 <input type="radio" class="form-control" id="fullTimeStatus" name="status" value="Full Time"  
                                         {{#if isManager}} checked="checked" {{/if}} /> Full Time
-                                <input type="radio" class="form-control" id="partTimeStatus" name="status" value="Part Time"    /> Part Time
+                                <input type="radio" class="form-control" id="partTimeStatus" name="status" value="Part Time"   
+                                 {{#if isManager}} checked="checked" {{/if}}  /> Part Time
                             </div>
                         </div>
                          <div class="col-md-3">
@@ -112,7 +114,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="hireDate">Hire Date</label>
-                                <input class="form-control" id="hireDate" name="hireDate" type="text" value="{{hireDate}}" readonly  >
+                                <input class="form-control" id="hireDate" name="hireDate" type="text" value="{{hireDate}}" readonly  />
                             </div>
                         </div>
                     </div>
