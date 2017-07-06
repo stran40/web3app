@@ -50,14 +50,6 @@ app.engine(".hbs", exphbs({
             } else {
                 return options.fn(this);
             }
-        },
-        statusValue: function(options){
-            var result;
-            if (options.fn(this) == 'Full Time')
-                result = true;
-            else
-                result = false;
-            return result;
         }
     }
 }));
