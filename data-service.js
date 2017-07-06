@@ -48,7 +48,6 @@ function worker(setNum, setFirstName, setLastName, setEmail, setSSN,
     this.status = setStatus;
     this.department = setDepartment;
     this.hireDate = setHireDate;
-    this.status = setStatusBool;
 };
 
 // worker prototype: methods setting properties of worker obj
@@ -97,12 +96,6 @@ worker.prototype.setDepartment = function (newDepart) {
 worker.prototype.setHireDate = function (newHireDate) {
     this.hireDate = newHireDate
 };
-worker.prototype.setStatusBool = function (newStatus) {
-    if (newStatus == 'Full Time')
-        this.statusBool = true;
-    else
-         this.statusBool = false;
-};
 /*-----------------------------------
  * departObj();
  * 
@@ -134,7 +127,7 @@ function readEmployees() {
                     obj[i].addressPostal, obj[i].maritalStatus,
                     obj[i].isManager, obj[i].employeeManagerNum,
                     obj[i].status, obj[i].department,
-                    obj[i].hireDate);
+                    obj[i].hireDate );
                 employees.push(person);
             }
             resolve(employees);
