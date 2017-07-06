@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         {{#each data}} 
+
         <h2>{{firstName}} {{lastName}} - Employee: {{employeeNum}}</h2>
         
             <form method="post" action="/employee/update">
@@ -89,9 +90,9 @@
                             <div class="form-group">
                                 <label for="status">Status:</label>
                                 <input type="radio" class="form-control" id="fullTimeStatus" name="status" value="Full Time"  
-                                        {{#if statusValue}} checked="checked" {{/if}} /> Full Time
+                                        {{#if statusBool}} checked="checked" {{/if}} /> Full Time
                                 <input type="radio" class="form-control" id="partTimeStatus" name="status" value="Part Time"   
-                                 {{#if statusValue}} checked="checked" {{/if}}  /> Part Time
+                                 {{#unless statusBool}} checked="checked" {{/if}}  /> Part Time
                             </div>
                         </div>
                          <div class="col-md-3">
