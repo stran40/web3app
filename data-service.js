@@ -48,9 +48,16 @@ function worker(setNum, setFirstName, setLastName, setEmail, setSSN,
     this.status = setStatus;
     this.department = setDepartment;
     this.hireDate = setHireDate;
+    if ( setStatus == 'Full Time' )
+        this.statusBool = true
+    else
+        this.statusBool = false;
 };
 
 // worker prototype: methods setting properties of worker obj
+worker.prototype.setNum = function (newNum) {
+    this.employeeNum = newNum
+};
 worker.prototype.setNum = function (newNum) {
     this.employeeNum = newNum
 };
