@@ -48,7 +48,7 @@ var Department = sequelize.define('Department', {
         primaryKey: true,
         autoIncrement: true
     },
-    departmentName : Sequelize.STRING
+    departmentName: Sequelize.STRING
 
 });
 
@@ -75,7 +75,7 @@ initialize = () => {
         sequelize.sync().then(function () {
 
             // create a new "Employee" table and add it to the database
-            Employee.create({ }).then(function (employee) {
+            Employee.create({}).then(function (employee) {
                 console.log("Worker model created.");
                 resolve();
             })
@@ -86,159 +86,85 @@ initialize = () => {
                 console.log("Something went wrong with model creation.");
             });
         });
-        reject();
     });
 
 
 }; // end of initialize();
-/*-----------------------------------
- * worker();
- * 
- * Function constructor for person object
- * --------------------------------*/
-function worker(setNum, setFirstName, setLastName, setEmail, setSSN,
-    setAddressStreet, setAddressCity, setAddressState,
-    setAddressPostal, setMaritalStatus, setManager,
-    setEmployeeManagerNum, setStatus, setDepartment, setHireDate) {
-    this.employeeNum = setNum;
-    this.firstName = setFirstName;
-    this.lastName = setLastName;
-    this.email = setEmail;
-    this.ssn = setSSN;
-    this.addressStreet = setAddressStreet;
-    this.addresCity = setAddressCity;
-    this.addressState = setAddressState;
-    this.addressPostal = setAddressPostal;
-    this.maritalStatus = setMaritalStatus;
-    this.isManager = setManager;
-    this.employeeManagerNum = setEmployeeManagerNum;
-    this.status = setStatus;
-    this.department = setDepartment;
-    this.hireDate = setHireDate;
-    if (setStatus == 'Full Time')
-        this.statusBool = true
-    else
-        this.statusBool = false;
-};
-
-// worker prototype: methods setting properties of worker obj
-worker.prototype.setNum = function (newNum) {
-    this.employeeNum = newNum
-};
-worker.prototype.setNum = function (newNum) {
-    this.employeeNum = newNum
-};
-worker.prototype.setFirstName = function (newFirstName) {
-    this.firstName = newFirstName
-};
-worker.prototype.setLastName = function (newLastName) {
-    this.lastName = newLastName
-};
-worker.prototype.setEmail = function (newEmail) {
-    this.email = newEmail
-};
-worker.prototype.setSSN = function (newSSN) {
-    this.SSN = newSSN
-};
-worker.prototype.setAddressStreet = function (newAddressStreet) {
-    this.addressStreet = newAddressStreet
-};
-worker.prototype.setAddressCity = function (newCity) {
-    this.addresCity = newCity
-};
-worker.prototype.setAddressState = function (newState) {
-    this.addressState = newState
-};
-worker.prototype.setAddressPostal = function (newPostal) {
-    this.addressPostal = newPostal
-};
-worker.prototype.setMaritalStatus = function (newMarital) {
-    this.maritalStatus = newMartial
-};
-worker.prototype.setManager = function (newIsManager) {
-    this.isManager = newIsManager
-};
-worker.prototype.setEmployeeManagerNum = function (newEmployeeManagerNum) {
-    this.employeeManagerNum = newEmployeeManagerNum
-};
-worker.prototype.setStatus = function (newStatus) {
-    this.status = newStatus
-};
-worker.prototype.setDepartment = function (newDepart) {
-    this.department = newDepart
-};
-worker.prototype.setHireDate = function (newHireDate) {
-    this.hireDate = newHireDate
-};
-/*-----------------------------------
- * departObj();
- * 
- * Function constructor for department object
- * --------------------------------*/
-function departObj(setID, setName) {
-    this.departID = setID;
-    this.departName = setName;
-};
-
-// department prototype: methods setting properties of department obj
-departObj.prototype.setID = function (newID) {
-    this.departID = newID
-};
-departObj.prototype.setName = function (newName) {
-    this.departName = newName
-};
-
-function readEmployees() {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
-
-}; // end of readEmployees()
-
-function readDepartments(msg) {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
-
-} // end of readDepartments();
-
 
 /*-----------------------------------
  * getAllEmployees();
  * --------------------------------*/
 getAllEmployees = (msg) => {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync().then(function () {
+            Employee.findAll()
+                .then(function (data) {
+                    resolve(data);
+                }).catch(function (error) {
+                    reject('No results returned.');
+                });
+        });
     });
-
 };
-
 /*-----------------------------------
  * getEmployeesByStatus(status);
  * --------------------------------*/
 getEmployeesByStatus = (status) => {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync().then(function () {
+            Employee.findAll({
+                    where: {
+                        status: status
+                    }
+                })
+                .then(function (data) {
+                    resolve(data);
+                })
+                .catch(function (error) {
+                    reject('No results returned.');
+                });
+        });
     });
-
 };
-
 /*-----------------------------------
  * getEmployeesByDepartment(department)
  * --------------------------------*/
 getEmployeesByDepartment = (department) => {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync().then(function () {
+            Employee.findAll({
+                    where: {
+                        department: department
+                    }
+                })
+                .then(function (data) {
+                    resolve(data);
+                })
+                .catch(function (error) {
+                    reject('No results returned.');
+                });
+        });
     });
 
 };
-
 /*-----------------------------------
  * getEmployeesByManager(manager)
  * --------------------------------*/
 getEmployeesByManager = (manager) => {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync().then(function () {
+            Employee.findAll({
+                    where: {
+                        manager: manager
+                    }
+                })
+                .then(function (data) {
+                    resolve(data);
+                })
+                .catch(function (error) {
+                    reject('No results returned.');
+                });
+        });
     });
 
 };
@@ -247,19 +173,41 @@ getEmployeesByManager = (manager) => {
  * --------------------------------*/
 getEmployeeByNum = (num) => {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync().then(function () {
+            Employee.findAll({
+                    where: {
+                        employeeNum: num
+                    }
+                })
+                .then(function (data) {
+                    resolve(data);
+                })
+                .catch(function (error) {
+                    reject('No results returned.');
+                });
+        });
     });
 
 };
-
 /*-----------------------------------
  * getManagers()
  * --------------------------------*/
 getManagers = () => {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync().then(function () {
+            Employee.findAll({
+                    where: {
+                        isManager: true
+                    }
+                })
+                .then(function (data) {
+                    resolve(data);
+                })
+                .catch(function (error) {
+                    reject('No results returned.');
+                });
+        });
     });
-
 };
 
 /*-----------------------------------
@@ -267,7 +215,15 @@ getManagers = () => {
  * --------------------------------*/
 getDepartments = () => {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync().then(function () {
+            Department.findAll()
+                .then(function (data) {
+                    resolve(data);
+                })
+                .catch(function (error) {
+                    reject('No results returned.');
+                });
+        });
     });
 
 };
@@ -277,7 +233,37 @@ getDepartments = () => {
  * --------------------------------*/
 addEmployee = (employeeData) => {
     return new Promise(function (resolve, reject) {
-        reject();
+        employeeData.isManager = (employeeData.isManager) ? true : false;
+        // set blank values to null
+        for (var prop in Employee) {
+            if (prop == '')
+                prop = null;
+        };
+
+        // create Employee obj
+        Employee.create({
+            employeeNum: employeeData.employeeNum,
+            firstName: employeeData.firstName,
+            last_name: employeeData.last_name,
+            email: employeeData.email,
+            SSN: employeeData.SSN,
+            addressStreet: employeeData.addressStreet,
+            addresCity: employeeData.addresCity,
+            addressState: employeeData.addressState,
+            addressPostal: employeeData.addressPostal,
+            maritalStatus: employeeData.maritalStatus,
+            isManager: employeeData.isManager,
+            employeeManagerNum: employeeData.employeeManagerNum,
+            status: employeeData.status,
+            department: employeeData.department,
+            hireDate: employeeData.hireDate
+        }).then(function (project) {
+            // you can now access the newly created Project via the variable project
+            console.log("success!")
+        }).catch(function (error) {
+            console.log("unable to create employee.");
+        });
+
     });
 
 };
