@@ -11,12 +11,46 @@ var sequelize = new Sequelize('d19638ftm2u815', 'upyrexbutjnovu', 'ad0e8893af863
 
 sequelize
     .authenticate()
-    .then(function() {
+    .then(function () {
         console.log('Connection has been established successfully.');
     })
-    .catch(function(err) {
+    .catch(function (err) {
         console.log('Unable to connect to the database:', err);
     });
+
+// Define a "Employee" model
+var Employee = sequelize.define('Employee', {
+    employeeNum: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    firstName: Sequelize.STRING,
+    last_name: Sequelize.STRING,
+    email: Sequelize.STRING,
+    SSN: Sequelize.STRING,
+    addressStreet: Sequelize.STRING,
+    addresCity: Sequelize.STRING,
+    addressState: Sequelize.STRING,
+    addressPostal: Sequelize.STRING,
+    maritalStatus: Sequelize.STRING,
+    isManager: Sequelize.BOOLEAN,
+    employeeManagerNum: Sequelize.INTEGER,
+    status: Sequelize.STRING,
+    department: Sequelize.INTEGER,
+    hireDate: Sequelize.STRING
+});
+
+// Define a "Department" model
+var Department = sequelize.define('Department', {
+    departmentId: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    departmentName : Sequelize.STRING
+
+});
 
 setMessage = (msg) => {
     return new Promise(function (resolve, reject) {
@@ -30,7 +64,33 @@ getMessage = () => {
         reject();
     });
 
-}
+};
+
+/*-----------------------------------
+ * initialize();
+ * 
+ * --------------------------------*/
+initialize = () => {
+    return new Promise(function (resolve, reject) {
+        sequelize.sync().then(function () {
+
+            // create a new "Employee" table and add it to the database
+            Employee.create({ }).then(function (employee) {
+                console.log("Worker model created.");
+                resolve();
+            })
+            Department.create({}).then(function (employee) {
+                console.log("Department model created.");
+                resolve();
+            }).catch(function (error) {
+                console.log("Something went wrong with model creation.");
+            });
+        });
+        reject();
+    });
+
+
+}; // end of initialize();
 /*-----------------------------------
  * worker();
  * 
@@ -142,20 +202,6 @@ function readDepartments(msg) {
 
 } // end of readDepartments();
 
-/*-----------------------------------
- * initialize();
- * 
- * Reads contents of employees.json.
- * Converts file's contents into array of objects.
- * Assigns this array to employees array.
- * --------------------------------*/
-initialize = () => {
-    return new Promise(function (resolve, reject) {
-        reject();
-    });
-
-
-}; // end of initialize();
 
 /*-----------------------------------
  * getAllEmployees();
