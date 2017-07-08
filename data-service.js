@@ -383,5 +383,8 @@ module.exports = {
     getManagers: getManagers,
     getDepartments: getDepartments,
     addEmployee: addEmployee,
-    updateEmployee: updateEmployee
+    updateEmployee: updateEmployee,
+    getDepartmentById : getDepartmentById,
+    updateDepartment : updateDepartment,
+    addDepartment : addDepartment
 }

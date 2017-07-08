@@ -78,7 +78,7 @@ app.get("/employees", (req, res) => {
     try {
         if (req.query.status) {
             dataService.getEmployeesByStatus(req.query.status).then((data) => {
-               res.render("employeeList", {
+                res.render("employeeList", {
                     data: data,
                     title: "Employees"
                 });
@@ -119,17 +119,19 @@ app.get('/employees/add', function (req, res) {
     try {
         res.render("addEmployee");
     } catch (rejectMsg) {
-        res.render("addEmployee", { title: "Add Employee" });
+        res.render("addEmployee", {
+            title: "Add Employee"
+        });
     };
 });
 
 app.post("/employees/add", (req, res) => {
- try{
-    dataService.addEmployee(req.body).then(() => {
-    res.redirect("/employees")});
- }
- catch (rejectMsg) {
-        res.status(404).send("Could not add employee."); 
+    try {
+        dataService.addEmployee(req.body).then(() => {
+            res.redirect("/employees")
+        });
+    } catch (rejectMsg) {
+        res.status(404).send("Could not add employee.");
     };
 });
 
@@ -137,16 +139,18 @@ app.get('/employees/:id', function (req, res) {
     try {
         dataService.getEmployeeByNum(req.params.id).then((data) => {
             res.render("employee", {
-                    data: data});
+                data: data
+            });
         })
     } catch (rejectMsg) {
-        res.status(404).send("Employee Not Found"); 
+        res.status(404).send("Employee Not Found");
     };
 });
 app.get("/employee/:empNum", (req, res) => {
     try {
         res.render("employee", {
-                    data: data});
+            data: data
+        });
     } catch (rejectMsg) {
         // catch any errors here
         console.log(rejectMsg);
@@ -154,15 +158,14 @@ app.get("/employee/:empNum", (req, res) => {
 });
 
 app.post("/employee/update", (req, res) => {
-    try{
-    dataService.updateEmployee(req.body).then(() => {
-        res.redirect("/employees")}
-    );
-    }
-    catch (rejectMsg) {
-            // catch any errors here
-            console.log(rejectMsg);
-        };
+    try {
+        dataService.updateEmployee(req.body).then(() => {
+            res.redirect("/employees")
+        });
+    } catch (rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
 });
 
 // setup route to listen on /managers
@@ -186,10 +189,57 @@ app.get("/managers", (req, res) => {
 app.get("/departments", (req, res) => {
     try {
         dataService.getDepartments().then((data) => {
-             res.render("departmentList", { data: data, title: "Departments" }); 
+            res.render("departmentList", {
+                data: data,
+                title: "Departments"
+            });
         })
     } catch (rejectMsg) {
-       res.render("departmentList", { data: {}, title: "Departments" });
+        res.render("departmentList", {
+            data: {},
+            title: "Departments"
+        });
+    };
+});
+// setup route to listen on /departments/add
+app.get("/departments/add", (req, res) => {
+     try {
+        res.render("addDepartment");
+    } catch (rejectMsg) {
+        res.render("addDepartment", {
+            title: "Add Department"
+        });
+    };
+});
+app.post("/departments/add", (req, res) => {
+     try {
+         dataService.addDepartment(req.body).then(() => {
+            res.redirect("/departments")
+        });
+    } catch (rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
+});
+app.post("/departments/update", (req, res) => {
+    try {
+        dataService.updateDepartment(req.body).then(() => {
+            res.redirect("/departments")
+        });
+    } catch (rejectMsg) {
+        // catch any errors here
+        console.log(rejectMsg);
+    };
+});
+app.get("/department/:departmentNum", (req, res) => {
+     try {
+        dataService.getDepartmentById(req.params.id).then((data) => {
+            res.render("department", {
+                data: data
+            });
+        })
+    } catch (rejectMsg) {
+        res.status(404).send("Department Not Found");
     };
 });
 
