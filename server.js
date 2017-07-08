@@ -18,8 +18,6 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 
 const chalk = require("chalk");
-var test = chalk.cyan;
-var test2 = chalk.yellow;
 
 const HTTP_PORT = process.env.PORT || 8080;
 

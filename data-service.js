@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const Sequelize = require('sequelize');
 
 var sequelize = new Sequelize('d19638ftm2u815', 'upyrexbutjnovu', 'ad0e8893af8635af64b9ec305dbe232b94799f0b4fc695385ae3201fd2818882', {
@@ -187,7 +188,6 @@ getEmployeeByNum = (num) => {
                 });
         });
     });
-
 };
 /*-----------------------------------
  * getManagers()
@@ -257,27 +257,120 @@ addEmployee = (employeeData) => {
             status: employeeData.status,
             department: employeeData.department,
             hireDate: employeeData.hireDate
-        }).then(function (project) {
+        }).then(function (employee) {
             // you can now access the newly created Project via the variable project
-            console.log("success!")
+            console.log( chalk.yellow ("Employee created."));
+            resolve(data);
         }).catch(function (error) {
-            console.log("unable to create employee.");
+            reject("unable to create employee.");
         });
-
     });
-
 };
-
 /*-----------------------------------
  *  updateEmployee(employeeData) 
  * --------------------------------*/
 updateEmployee = (employeeData) => {
     return new Promise(function (resolve, reject) {
-        reject();
+        employeeData.isManager = (employeeData.isManager) ? true : false;
+        // set blank values to null
+        for (var prop in Employee) {
+            if (prop == '')
+                prop = null;
+        };
+         // update Employee obj
+        Employee.update({
+            employeeNum: employeeData.employeeNum,
+            firstName: employeeData.firstName,
+            last_name: employeeData.last_name,
+            email: employeeData.email,
+            SSN: employeeData.SSN,
+            addressStreet: employeeData.addressStreet,
+            addresCity: employeeData.addresCity,
+            addressState: employeeData.addressState,
+            addressPostal: employeeData.addressPostal,
+            maritalStatus: employeeData.maritalStatus,
+            isManager: employeeData.isManager,
+            employeeManagerNum: employeeData.employeeManagerNum,
+            status: employeeData.status,
+            department: employeeData.department,
+            hireDate: employeeData.hireDate
+        }, {
+            where : { id : employeeData.employeeNum }
+        }).then(function (employee) {
+             console.log( chalk.yellow ("Employee updated."));
+            resolve(data);
+        }).catch(function (error) {
+            reject("unable to update employee.");
+        });
     });
-
+};
+/*-----------------------------------
+ *  addDepartment(departmentData)
+ * --------------------------------*/
+addDepartment = (departmentData) => {
+    return new Promise(function (resolve, reject) {
+        // set blank values to null
+        for (var prop in Department) {
+            if (prop == '')
+                prop = null;
+        };
+        //create department obj
+        Department.create({
+                departmentId: departmentData.departmentId,
+                departmentName: departmentData.departmentName
+        }).then( function(data) {
+            console.log( chalk.yellow ('Department obj created.'));
+            resolve(data);
+        }).catch(function (error) {
+            reject("unable to add department.");
+        });
+    });
+};
+/*-----------------------------------
+ *  updateDepartment(departmentData)
+ * --------------------------------*/
+updateDepartment = (departmentData) => {
+    return new Promise(function (resolve, reject) {
+        // set blank values to null
+        for (var prop in Department) {
+            if (prop == '')
+                prop = null;
+        };
+         // update Employee obj
+        departmentData.update({
+            departmentId: departmentData.departmentId,
+            departmentName: departmentData.departmentName
+        }, {
+            where : { departmentId : employeeData.departmentId }
+        }).then(function (employee) {
+            console.log( chalk.yellow ("Department updated."));
+            resolve(data);
+        }).catch(function (error) {
+            reject("unable to update department.");
+        });
+    });
 };
 
+/*-----------------------------------
+ * getDepartmentById(id)
+ * --------------------------------*/
+getDepartmentById = (id) => {
+    return new Promise(function (resolve, reject) {
+        sequelize.sync().then(function () {
+            Department.findAll({
+                    where: {
+                        departmentId: num
+                    }
+                })
+                .then(function (data) {
+                    resolve(data);
+                })
+                .catch(function (error) {
+                    reject('No results returned.');
+                });
+        });
+    });
+};
 module.exports = {
     initialize: initialize,
     setMessage: setMessage,
