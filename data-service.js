@@ -5,20 +5,17 @@ var test2 = chalk.yellow;
 var error = chalk.red.bold;
 
 setMessage = (msg) => {
-    return new Promise((resolve, reject) => {
-        message = msg;
-        resolve;
+    return new Promise(function (resolve, reject) {
+        reject();
     });
+
 };
 
 getMessage = () => {
-    return new Promise((resolve, reject) => {
-        if (message.length > 0) {
-            resolve(message)
-        } else {
-            reject("Oh No!");
-        }
+    return new Promise(function (resolve, reject) {
+        reject();
     });
+
 }
 /*-----------------------------------
  * worker();
@@ -44,7 +41,7 @@ function worker(setNum, setFirstName, setLastName, setEmail, setSSN,
     this.status = setStatus;
     this.department = setDepartment;
     this.hireDate = setHireDate;
-    if ( setStatus == 'Full Time' )
+    if (setStatus == 'Full Time')
         this.statusBool = true
     else
         this.statusBool = false;
@@ -119,38 +116,16 @@ departObj.prototype.setName = function (newName) {
 
 function readEmployees() {
     return new Promise(function (resolve, reject) {
-        fs.readFile('./data/employees.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            for (var i = 0; i < obj.length; i++) {
-                var person = new worker(obj[i].employeeNum, obj[i].firstName,
-                    obj[i].last_name, obj[i].email,
-                    obj[i].SSN, obj[i].addressStreet,
-                    obj[i].addresCity, obj[i].addressState,
-                    obj[i].addressPostal, obj[i].maritalStatus,
-                    obj[i].isManager, obj[i].employeeManagerNum,
-                    obj[i].status, obj[i].department,
-                    obj[i].hireDate );
-                employees.push(person);
-            }
-            resolve(employees);
-        });
+        reject();
     });
+
 }; // end of readEmployees()
 
 function readDepartments(msg) {
-    var tempArray = [];
     return new Promise(function (resolve, reject) {
-        fs.readFile('./data/departments.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            for (var i = 0; i < obj.length; i++) {
-                var tempDepartObj = new departObj(obj[i].departmentId, obj[i].departmentName);
-                departments.push(tempDepartObj);
-            }
-            resolve(departments);
-        });
+        reject();
     });
+
 } // end of readDepartments();
 
 /*-----------------------------------
@@ -162,22 +137,10 @@ function readDepartments(msg) {
  * --------------------------------*/
 initialize = () => {
     return new Promise(function (resolve, reject) {
-        // invoke functions in order
-        readEmployees()
-            .then(readDepartments)
-            .then(() => {
-                empCount = employees.length;
-            })
-            .then(() => {
-                resolve();
-            })
-            .catch(function (rejectMsg) {
-                // catch errors here
-                console.log(rejectMsg);
-            });
-            
+        reject();
     });
-  
+
+
 }; // end of initialize();
 
 /*-----------------------------------
@@ -185,31 +148,17 @@ initialize = () => {
  * --------------------------------*/
 getAllEmployees = (msg) => {
     return new Promise(function (resolve, reject) {
-        if (employees.length > 0) {
-            resolve(employees);
-        } else {
-            reject("No results returned from getAllEmployees();");
-        }
+        reject();
     });
+
 };
 
 /*-----------------------------------
  * getEmployeesByStatus(status);
  * --------------------------------*/
 getEmployeesByStatus = (status) => {
-    // create variable to hold matches
-    var matches = [];
     return new Promise(function (resolve, reject) {
-        if (employees.length > 0) {
-            for (var i = 0; i < employees.length; i++) {
-                if (status == employees[i].status) {
-                    matches.push(employees[i]);
-                }
-            }
-            resolve(matches);
-        } else {
-            reject("\nNo results returned from getEmployeesByStatus();");
-        }
+        reject();
     });
 
 };
@@ -218,97 +167,47 @@ getEmployeesByStatus = (status) => {
  * getEmployeesByDepartment(department)
  * --------------------------------*/
 getEmployeesByDepartment = (department) => {
-    // create variable to hold matches
-    var matches = [];
     return new Promise(function (resolve, reject) {
-        if (employees.length > 0) {
-            for (var i = 0; i < employees.length; i++) {
-                if (department == employees[i].department) {
-                    matches.push(employees[i]);
-                }
-            }
-            resolve(matches);
-        } else {
-            reject("\nNo results returned from getEmployeesByDepartment();");
-        }
+        reject();
     });
+
 };
 
 /*-----------------------------------
  * getEmployeesByManager(manager)
  * --------------------------------*/
 getEmployeesByManager = (manager) => {
-    // create variable to hold matches
-    var matches = [];
     return new Promise(function (resolve, reject) {
-        if (employees.length > 0) {
-            for (var i = 0; i < employees.length; i++) {
-                if (manager == employees[i].employeeManagerNum) {
-                    matches.push(employees[i]);
-                }
-            }
-            resolve(matches);
-        } else {
-            reject("\nNo results returned from getEmployeesByManager();");
-        }
+        reject();
     });
+
 };
 /*-----------------------------------
  * getEmployeeByNum(num)
  * --------------------------------*/
 getEmployeeByNum = (num) => {
-    // create variable to hold matches
-    var matches = [];
     return new Promise(function (resolve, reject) {
-        if (employees.length > 0) {
-            for (var i = 0; i < employees.length; i++) {
-                if (num == employees[i].employeeNum) {
-                    matches.push(employees[i]);
-                }
-            }
-            resolve(matches);
-        } else {
-            reject("\nNo results returned from getEmployeesByNum();");
-        }
+        reject();
     });
+
 };
 
 /*-----------------------------------
  * getManagers()
  * --------------------------------*/
 getManagers = () => {
-    // create variable to hold matches
-    var matches = [];
     return new Promise(function (resolve, reject) {
-        if (employees.length > 0) {
-            for (var i = 0; i < employees.length; i++) {
-                if (employees[i].isManager ) {
-                    matches.push(employees[i]);
-                }
-            }
-            resolve(matches);
-        } else {
-            reject("\nNo results returned from getManagers();");
-        }
+        reject();
     });
+
 };
 
 /*-----------------------------------
  * getDepartments()
  * --------------------------------*/
 getDepartments = () => {
-    // create variable to hold matches
-    var matches = [];
     return new Promise(function (resolve, reject) {
-        if (departments.length > 0) {
-            for (var i = 0; i < departments.length; i++) {
-                matches.push(departments[i]);
-            }
-            resolve(matches);
-
-        } else {
-            reject("No results returned from getDepartments();");
-        }
+        reject();
     });
 
 };
@@ -316,32 +215,21 @@ getDepartments = () => {
 /*-----------------------------------
  *  addEmployee(employeeData);
  * --------------------------------*/
- addEmployee = (employeeData) => {
-     return new Promise(function (resolve, reject) {
-        empCount++;
-        employeeData.employeeNum = empCount;
-        // add new employeeData obj to employees array
-        employees.push(employeeData);
-        resolve();
-     });
- };
+addEmployee = (employeeData) => {
+    return new Promise(function (resolve, reject) {
+        reject();
+    });
+
+};
 
 /*-----------------------------------
  *  updateEmployee(employeeData) 
  * --------------------------------*/
 updateEmployee = (employeeData) => {
     return new Promise(function (resolve, reject) {
-        console.log("updateEmployee called.");
-        console.log("Employee being updated: " + JSON.stringify(employeeData) );
-       // search employees array
-       for ( var i = 0; i < employees.length; i++  ) {
-            if ( employees[i].employeeNum = employeeData.employeeNum ){
-                console.log("Match found: " + employees[i].employeeNum + " = " + employeeData.employeeNum );
-                employees[i] = employeeData; // match found. Overwrite object with new data
-            }
-       }
-        resolve();
-     });
+        reject();
+    });
+
 };
 
 module.exports = {
@@ -355,6 +243,6 @@ module.exports = {
     getEmployeeByNum: getEmployeeByNum,
     getManagers: getManagers,
     getDepartments: getDepartments,
-    addEmployee : addEmployee,
-    updateEmployee : updateEmployee
+    addEmployee: addEmployee,
+    updateEmployee: updateEmployee
 }
