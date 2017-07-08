@@ -1,8 +1,22 @@
-const fs = require("fs");
-const chalk = require("chalk");
-var test = chalk.cyan;
-var test2 = chalk.yellow;
-var error = chalk.red.bold;
+const Sequelize = require('sequelize');
+
+var sequelize = new Sequelize('d19638ftm2u815', 'upyrexbutjnovu', 'ad0e8893af8635af64b9ec305dbe232b94799f0b4fc695385ae3201fd2818882', {
+    host: 'ec2-107-21-205-25.compute-1.amazonaws.com',
+    dialect: 'postgres',
+    port: 5432,
+    dialectOptions: {
+        ssl: true
+    }
+});
+
+sequelize
+    .authenticate()
+    .then(function() {
+        console.log('Connection has been established successfully.');
+    })
+    .catch(function(err) {
+        console.log('Unable to connect to the database:', err);
+    });
 
 setMessage = (msg) => {
     return new Promise(function (resolve, reject) {
