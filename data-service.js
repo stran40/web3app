@@ -77,12 +77,12 @@ initialize = () => {
 
             // create a new "Employee" table and add it to the database
             Employee.create({}).then(function (employee) {
-                console.log("Worker model created.");
+                console.log(chalk.cyan("Worker model created."));
+            }).then( function(){
+                Department.create({}).then(function (employee) {
+                console.log(chalk.cyan("Department model created."));
                 resolve();
-            })
-            Department.create({}).then(function (employee) {
-                console.log("Department model created.");
-                resolve();
+             })
             }).catch(function (error) {
                 console.log("Something went wrong with model creation.");
             });
