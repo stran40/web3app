@@ -4,10 +4,6 @@ var test = chalk.cyan;
 var test2 = chalk.yellow;
 var error = chalk.red.bold;
 
-var employees = [];
-var empCount = 0;
-var departments = [];
-
 setMessage = (msg) => {
     return new Promise((resolve, reject) => {
         message = msg;
