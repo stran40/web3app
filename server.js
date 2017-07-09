@@ -248,9 +248,10 @@ app.post("/departments/update", (req, res) => {
         console.log(rejectMsg);
     };
 });
-app.get("/department/:departmentNum", (req, res) => {
+app.get("/department/:id", (req, res) => {
     try {
         dataService.getDepartmentById(req.params.id).then((data) => {
+            console.log(chalk.yellow('departmentID: ' +req.params.id ));
             res.render("department", {
                 data: data
             });

@@ -34,7 +34,7 @@ var Employee = sequelize.define('Employee', {
     addresCity: Sequelize.STRING,
     addressState: Sequelize.STRING,
     addressPostal: Sequelize.STRING,
-    maritalStatus:Sequelize.STRING,
+    maritalStatus: Sequelize.STRING,
     isManager: Sequelize.BOOLEAN,
     employeeManagerNum: Sequelize.INTEGER,
     status: Sequelize.STRING,
@@ -74,11 +74,11 @@ getMessage = () => {
 initialize = () => {
     return new Promise(function (resolve, reject) {
         sequelize.sync()
-        .then(() => {
-            resolve();
-        })
-        .catch(function (error) {
-            console.log("Something went wrong with model creation.");
+            .then(() => {
+                resolve();
+            })
+            .catch(function (error) {
+                console.log("Something went wrong with model creation.");
             });
     });
 }; // end of initialize();
@@ -207,7 +207,7 @@ getManagers = () => {
 getDepartments = () => {
     return new Promise(function (resolve, reject) {
         sequelize.sync().then(function () {
-            Department.findAll() 
+            Department.findAll()
                 .then(function (data) {
                     console.log(chalk.yellow('getDepartments() ran.'));
                     resolve(data);
@@ -264,7 +264,7 @@ addEmployee = (employeeData) => {
  * --------------------------------*/
 updateEmployee = (employeeData) => {
     return new Promise(function (resolve, reject) {
-        sequelize.sync().then(function (employeeData) {
+        sequelize.sync().then(function () {
             employeeData.isManager = (employeeData.isManager) ? true : false;
             // set blank values to null
             for (var prop in Employee) {
@@ -302,6 +302,27 @@ updateEmployee = (employeeData) => {
     });
 };
 /*-----------------------------------
+ * deleteEmployeeByNum(empNum)
+ * --------------------------------*/
+deleteEmployeeByNum = (empNum) => {
+    return new Promise(function (resolve, reject) {
+        sequelize.sync().then(function () {
+            Department.findAll({
+                    where: {
+                        departmentId: id
+                    }
+                })
+                .then(function (data) {
+                    resolve(data);
+                })
+                .catch(function (error) {
+                    console.log('No results returned.');
+                });
+        });
+    });
+};
+
+/*-----------------------------------
  *  addDepartment(departmentData)
  * --------------------------------*/
 addDepartment = (departmentData) => {
@@ -328,24 +349,26 @@ addDepartment = (departmentData) => {
  * --------------------------------*/
 updateDepartment = (departmentData) => {
     return new Promise(function (resolve, reject) {
-        // set blank values to null
-        for (var prop in Department) {
-            if (prop == '')
-                prop = null;
-        };
-        // update Employee obj
-        departmentData.update({
-            departmentId: departmentData.departmentId,
-            departmentName: departmentData.departmentName
-        }, {
-            where: {
-                departmentId: employeeData.departmentId
-            }
-        }).then(function (employee) {
-            console.log(chalk.yellow("Department updated."));
-            resolve(data);
-        }).catch(function (error) {
-            console.log("unable to update department.");
+        sequelize.sync().then(function () {
+            // set blank values to null
+            for (var prop in Department) {
+                if (prop == '')
+                    prop = null;
+            };
+            // update department obj
+            Department.update({
+                departmentId: departmentData.departmentId,
+                departmentName: departmentData.departmentName
+            }, {
+                where: {
+                    departmentId: departmentData.departmentId
+                }
+            }).then(function (department) {
+                console.log(chalk.yellow("Department updated."));
+                resolve(department);
+            }).catch(function (error) {
+                console.log("unable to update department.");
+            });
         });
     });
 };
@@ -358,7 +381,7 @@ getDepartmentById = (id) => {
         sequelize.sync().then(function () {
             Department.findAll({
                     where: {
-                        departmentId: num
+                        departmentId: id
                     }
                 })
                 .then(function (data) {
@@ -385,5 +408,6 @@ module.exports = {
     updateEmployee: updateEmployee,
     getDepartmentById: getDepartmentById,
     updateDepartment: updateDepartment,
-    addDepartment: addDepartment
+    addDepartment: addDepartment,
+    deleteEmployeeByNum : deleteEmployeeByNum
 }
