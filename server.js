@@ -167,8 +167,6 @@ app.get("/employee/:empNum", (req, res) => {
             if (viewData.data == null) { // if no employee - return an error
                 res.status(404).send("Employee Not Found");
             } else {
-                console.log(chalk.green('viewData = ' + JSON.stringify(viewData)));
-
                 res.render("employee", {
                     viewData: viewData
                 }); // render the "employee" view
