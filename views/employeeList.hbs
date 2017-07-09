@@ -19,12 +19,14 @@ New Employee</a>
                     <th>Status</th>
                     <th>Department</th>
                     <th>Hired On</th>
-                </tr>    
+                    <th>&nbsp;</th>
+                </tr>
                 <tbody>
-                    {{#each data}}  <!-- create new row for each employee -->
+                    {{#each data}}
+                    <!-- create new row for each employee -->
                     <tr colspan="8">
                         <td>
-                             {{employeeNum}}
+                            {{employeeNum}}
                         </td>
                         <td>
                             <a href="/employee/{{employeeNum}}">
@@ -43,7 +45,7 @@ New Employee</a>
                             </a>
                         </td>
                         <td>
-                            <a href="/employees?status={{status}}"">
+                            <a href="/employees?status={{status}}">
                                 {{status}}
                             </a>
                         </td>
@@ -52,7 +54,13 @@ New Employee</a>
                                 {{department}}
                             </a>
                         </td>
-                        <td>{{hireDate}}</td>
+                        <td>
+                            {{hireDate}}
+                         </td>
+                        <!-- delete button -->
+                        <td>
+                            <a class="btn btn-danger" href="employee/delete/{{employeeNum}}">Remove</a>
+                        </td>
                     </tr>
                     {{/each}}
                 </tbody>

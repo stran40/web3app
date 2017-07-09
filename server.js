@@ -185,6 +185,16 @@ app.post("/employee/update", (req, res) => {
     };
 });
 
+app.get("/employee/delete/:empNum", (req, res) => {
+    try {
+        dataService.deleteEmployeeByNum(req.params.empNum).then(() => {
+            res.redirect("/employees");
+        })
+    } catch (rejectMsg) {
+        res.status(500).send("Unable to Remove Employee / Employee not found.");
+    };
+});
+
 // setup route to listen on /managers
 app.get("/managers", (req, res) => {
     try {

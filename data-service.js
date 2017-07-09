@@ -267,13 +267,13 @@ updateEmployee = (employeeData) => {
         sequelize.sync().then(function () {
             employeeData.isManager = (employeeData.isManager) ? true : false;
             // set blank values to null
-            for (var prop in Employee) {
-                if (prop == '')
-                    prop = null;
+            for (var prop in employeeData) {
+                if (employeeData[prop] == '')
+                    employeeData[prop] = null;
             };
             // update Employee obj
             Employee.update({
-                employeeNum: employeeData.employeeNum,
+                 employeeNum: employeeData.employeeNum,
                 firstName: employeeData.firstName,
                 last_name: employeeData.last_name,
                 email: employeeData.email,
@@ -282,7 +282,6 @@ updateEmployee = (employeeData) => {
                 addresCity: employeeData.addresCity,
                 addressState: employeeData.addressState,
                 addressPostal: employeeData.addressPostal,
-                maritalStatus: employeeData.maritalStatus,
                 isManager: employeeData.isManager,
                 employeeManagerNum: employeeData.employeeManagerNum,
                 status: employeeData.status,
@@ -290,11 +289,11 @@ updateEmployee = (employeeData) => {
                 hireDate: employeeData.hireDate
             }, {
                 where: {
-                    id: employeeData.employeeNum
+                    employeeNum: employeeData.employeeNum
                 }
             }).then(function (employee) {
                 console.log(chalk.yellow("Employee updated."));
-                resolve(data);
+                resolve(employee);
             }).catch(function (error) {
                 console.log("unable to update employee.");
             });
@@ -307,16 +306,16 @@ updateEmployee = (employeeData) => {
 deleteEmployeeByNum = (empNum) => {
     return new Promise(function (resolve, reject) {
         sequelize.sync().then(function () {
-            Department.findAll({
+            Employee.destroy({
                     where: {
-                        departmentId: id
+                        employeeNum : empNum
                     }
                 })
-                .then(function (data) {
-                    resolve(data);
+                .then(function () {
+                    resolve();
                 })
                 .catch(function (error) {
-                    console.log('No results returned.');
+                    console.log('Destroy was rejected.');
                 });
         });
     });
@@ -328,9 +327,9 @@ deleteEmployeeByNum = (empNum) => {
 addDepartment = (departmentData) => {
     return new Promise(function (resolve, reject) {
         // set blank values to null
-        for (var prop in Department) {
-            if (prop == '')
-                prop = null;
+        for (var prop in departmentData) {
+            if (departmentData[prop] == '')
+                departmentData[prop] = null;
         };
         //create department obj
         Department.create({
@@ -351,9 +350,9 @@ updateDepartment = (departmentData) => {
     return new Promise(function (resolve, reject) {
         sequelize.sync().then(function () {
             // set blank values to null
-            for (var prop in Department) {
-                if (prop == '')
-                    prop = null;
+            for (var prop in departmentData) {
+                if (departmentData[prop] == '')
+                    departmentData[prop] = null;
             };
             // update department obj
             Department.update({
