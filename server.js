@@ -6,7 +6,7 @@
  *
  * Name: Stephanie Tran Student ID: 132233162 Date: July 9 2017
  *
- * Online (Heroku) Link:https://git.heroku.com/web322-app-postgres.git
+ * Online (Heroku) Link:https://fierce-headland-81020.herokuapp.com/
  *
  ********************************************************************************/
 const express = require("express");
