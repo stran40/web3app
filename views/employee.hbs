@@ -98,15 +98,15 @@
                          <div class="col-md-3">
                             <div class="form-group">
                                 <label for="department">Department:</label>
-                                <select class="form-control" name="department" id="department">
-                                    <option value="1" {{#equal department "1" }}selected{{/equal}} >1</option>
-                                    <option value="2" {{#equal department "2" }}selected{{/equal}}>2</option>
-                                    <option value="3" {{#equal department "3" }}selected{{/equal}}>3</option>
-                                    <option value="4" {{#equal department "4" }}selected{{/equal}}>4</option>
-                                    <option value="5" {{#equal department "5" }}selected{{/equal}}>5</option>
-                                    <option value="6" {{#equal department "6" }}selected{{/equal}}>6</option>
-                                    <option value="7" {{#equal department "7" }}selected{{/equal}}>7</option>
-                                </select>
+                               {{#if viewData.departments}}
+                                    <select class="form-control" name="department" id="department">
+                                    {{#each viewData.departments}}
+                                    <option value="{{departmentId}}" {{#if selected}} selected {{/if}} >{{departmentName}} </option>
+                                    {{/each}}
+                                    </select>
+                                    {{else}}
+                                    <div>No Departments</div>
+                                {{/if}}
                             </div>
                         </div>
                     </div>

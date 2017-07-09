@@ -34,7 +34,6 @@ var Employee = sequelize.define('Employee', {
     addresCity: Sequelize.STRING,
     addressState: Sequelize.STRING,
     addressPostal: Sequelize.STRING,
-    maritalStatus: Sequelize.STRING,
     isManager: Sequelize.BOOLEAN,
     employeeManagerNum: Sequelize.INTEGER,
     status: Sequelize.STRING,
@@ -76,19 +75,18 @@ initialize = () => {
         sequelize.sync().then(function () {
 
             // create a new "Employee" table and add it to the database
-            Employee.create({}).then(function (employee) {
+            Employee.create().then(function (employee) {
                 console.log(chalk.cyan("Worker model created."));
-            }).then( function(){
-                Department.create({}).then(function (employee) {
-                console.log(chalk.cyan("Department model created."));
-                resolve();
-             })
+            }).then(function () {
+                Department.create().then(function (employee) {
+                    console.log(chalk.cyan("Department model created."));
+                    resolve();
+                })
             }).catch(function (error) {
                 console.log("Something went wrong with model creation.");
             });
         });
     });
-
 
 }; // end of initialize();
 
@@ -102,7 +100,7 @@ getAllEmployees = (msg) => {
                 .then(function (data) {
                     resolve(data);
                 }).catch(function (error) {
-                    reject('No results returned.');
+                    console.log('No results returned.');
                 });
         });
     });
@@ -122,7 +120,7 @@ getEmployeesByStatus = (status) => {
                     resolve(data);
                 })
                 .catch(function (error) {
-                    reject('No results returned.');
+                    console.log('No results returned.');
                 });
         });
     });
@@ -142,7 +140,7 @@ getEmployeesByDepartment = (department) => {
                     resolve(data);
                 })
                 .catch(function (error) {
-                    reject('No results returned.');
+                    console.log('No results returned.');
                 });
         });
     });
@@ -163,7 +161,7 @@ getEmployeesByManager = (manager) => {
                     resolve(data);
                 })
                 .catch(function (error) {
-                    reject('No results returned.');
+                    console.log('No results returned.');
                 });
         });
     });
@@ -184,7 +182,7 @@ getEmployeeByNum = (num) => {
                     resolve(data);
                 })
                 .catch(function (error) {
-                    reject('No results returned.');
+                    console.log('No results returned.');
                 });
         });
     });
@@ -204,7 +202,7 @@ getManagers = () => {
                     resolve(data);
                 })
                 .catch(function (error) {
-                    reject('No results returned.');
+                    console.log('No results returned.');
                 });
         });
     });
@@ -221,7 +219,7 @@ getDepartments = () => {
                     resolve(data);
                 })
                 .catch(function (error) {
-                    reject('No results returned.');
+                    console.log('No results returned (getDepartments()).');
                 });
         });
     });
@@ -233,36 +231,37 @@ getDepartments = () => {
  * --------------------------------*/
 addEmployee = (employeeData) => {
     return new Promise(function (resolve, reject) {
-        employeeData.isManager = (employeeData.isManager) ? true : false;
-        // set blank values to null
-        for (var prop in Employee) {
-            if (prop == '')
-                prop = null;
-        };
 
-        // create Employee obj
-        Employee.create({
-            employeeNum: employeeData.employeeNum,
-            firstName: employeeData.firstName,
-            last_name: employeeData.last_name,
-            email: employeeData.email,
-            SSN: employeeData.SSN,
-            addressStreet: employeeData.addressStreet,
-            addresCity: employeeData.addresCity,
-            addressState: employeeData.addressState,
-            addressPostal: employeeData.addressPostal,
-            maritalStatus: employeeData.maritalStatus,
-            isManager: employeeData.isManager,
-            employeeManagerNum: employeeData.employeeManagerNum,
-            status: employeeData.status,
-            department: employeeData.department,
-            hireDate: employeeData.hireDate
-        }).then(function (employee) {
-            // you can now access the newly created Project via the variable project
-            console.log( chalk.yellow ("Employee created."));
-            resolve(data);
-        }).catch(function (error) {
-            reject("unable to create employee.");
+        sequelize.sync().then(function () {
+            employeeData.isManager = (employeeData.isManager) ? true : false;
+            // set blank values to null
+            for (var prop in employeeData) {
+                if (employeeData[prop] == '') {
+                    employeeData[prop] = null;
+                }
+            };
+            // create Employee obj
+            Employee.create({
+                employeeNum: employeeData.employeeNum,
+                firstName: employeeData.firstName,
+                last_name: employeeData.last_name,
+                email: employeeData.email,
+                SSN: employeeData.SSN,
+                addressStreet: employeeData.addressStreet,
+                addresCity: employeeData.addresCity,
+                addressState: employeeData.addressState,
+                addressPostal: employeeData.addressPostal,
+                isManager: employeeData.isManager,
+                employeeManagerNum: employeeData.employeeManagerNum,
+                status: employeeData.status,
+                department: employeeData.department,
+                hireDate: employeeData.hireDate
+            }).then(function (data) {
+                console.log(chalk.yellow("Employee created."));
+                resolve(data);
+            }).catch(function (error) {
+                console.log("unable to create employee.");
+            });
         });
     });
 };
@@ -277,7 +276,7 @@ updateEmployee = (employeeData) => {
             if (prop == '')
                 prop = null;
         };
-         // update Employee obj
+        // update Employee obj
         Employee.update({
             employeeNum: employeeData.employeeNum,
             firstName: employeeData.firstName,
@@ -295,12 +294,14 @@ updateEmployee = (employeeData) => {
             department: employeeData.department,
             hireDate: employeeData.hireDate
         }, {
-            where : { id : employeeData.employeeNum }
+            where: {
+                id: employeeData.employeeNum
+            }
         }).then(function (employee) {
-             console.log( chalk.yellow ("Employee updated."));
+            console.log(chalk.yellow("Employee updated."));
             resolve(data);
         }).catch(function (error) {
-            reject("unable to update employee.");
+            console.log("unable to update employee.");
         });
     });
 };
@@ -316,13 +317,13 @@ addDepartment = (departmentData) => {
         };
         //create department obj
         Department.create({
-                departmentId: departmentData.departmentId,
-                departmentName: departmentData.departmentName
-        }).then( function(data) {
-            console.log( chalk.yellow ('Department obj created.'));
+            departmentId: departmentData.departmentId,
+            departmentName: departmentData.departmentName
+        }).then(function (data) {
+            console.log(chalk.yellow('Department obj created.'));
             resolve(data);
         }).catch(function (error) {
-            reject("unable to add department.");
+            console.log("unable to add department.");
         });
     });
 };
@@ -336,17 +337,19 @@ updateDepartment = (departmentData) => {
             if (prop == '')
                 prop = null;
         };
-         // update Employee obj
+        // update Employee obj
         departmentData.update({
             departmentId: departmentData.departmentId,
             departmentName: departmentData.departmentName
         }, {
-            where : { departmentId : employeeData.departmentId }
+            where: {
+                departmentId: employeeData.departmentId
+            }
         }).then(function (employee) {
-            console.log( chalk.yellow ("Department updated."));
+            console.log(chalk.yellow("Department updated."));
             resolve(data);
         }).catch(function (error) {
-            reject("unable to update department.");
+            console.log("unable to update department.");
         });
     });
 };
@@ -366,7 +369,7 @@ getDepartmentById = (id) => {
                     resolve(data);
                 })
                 .catch(function (error) {
-                    reject('No results returned.');
+                    console.log('No results returned.');
                 });
         });
     });
@@ -384,7 +387,7 @@ module.exports = {
     getDepartments: getDepartments,
     addEmployee: addEmployee,
     updateEmployee: updateEmployee,
-    getDepartmentById : getDepartmentById,
-    updateDepartment : updateDepartment,
-    addDepartment : addDepartment
+    getDepartmentById: getDepartmentById,
+    updateDepartment: updateDepartment,
+    addDepartment: addDepartment
 }

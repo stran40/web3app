@@ -116,22 +116,25 @@ app.get("/employees", (req, res) => {
 
 // add employees route
 app.get('/employees/add', function (req, res) {
-    try {
-        res.render("addEmployee");
+   try {
+       dataService.getDepartments().then((data) => {
+           console.log(chalk.yellow('getDepartments called.'));
+           res.render("addEmployee", {
+               departments: data
+            });
+       })
     } catch (rejectMsg) {
-        res.render("addEmployee", {
-            title: "Add Employee"
-        });
+        res.render("addEmployee", { title: "Add Employee" });
     };
 });
 
 app.post("/employees/add", (req, res) => {
-    try {
-        dataService.addEmployee(req.body).then(() => {
-            res.redirect("/employees")
-        });
-    } catch (rejectMsg) {
-        res.status(404).send("Could not add employee.");
+   try{
+    dataService.addEmployee(req.body).then(() => {
+    res.redirect("/employees")});
+ }
+ catch (rejectMsg) {
+        res.status(404).send("Could not add employee."); 
     };
 });
 
@@ -147,14 +150,38 @@ app.get('/employees/:id', function (req, res) {
     };
 });
 app.get("/employee/:empNum", (req, res) => {
-    try {
-        res.render("employee", {
-            data: data
-        });
-    } catch (rejectMsg) {
-        // catch any errors here
-        console.log(rejectMsg);
-    };
+    // initialize an empty object to store the values
+    let viewData = {};
+    dataService.getEmployeeByNum(req.params.empNum)
+        .then((data) => {
+            viewData.data = data; //store employee data in the "viewData" object as "data"
+        }).catch(() => {
+            viewData.data = null; // set employee to null if there was an error
+        }).then(dataService.getDepartments)
+        .then((data) => {
+            viewData.departments = data; // store department data in the "viewData" object as "departments"
+
+            // loop through viewData.departments and once we have found the departmentId that matches
+            // the employee's "department" value, add a "selected" property to the matching
+            // viewData.departments object
+            for (let i = 0; i < viewData.departments.length; i++) {
+                if (viewData.departments[i].departmentId == viewData.data.department) {
+                    viewData.departments[i].selected = true;
+                }
+            }
+        }).catch(() => {
+            viewData.departments = []; // set departments to empty if there was an error
+        }).then(() => {
+            if (viewData.data == null) { // if no employee - return an error
+                res.status(404).send("Employee Not Found");
+            } else {
+                res.render("employee", {
+                    viewData: viewData
+                }); // render the "employee" view
+            }
+        }).catch(() => {
+            reject();
+        })
 });
 
 app.post("/employee/update", (req, res) => {
@@ -203,7 +230,7 @@ app.get("/departments", (req, res) => {
 });
 // setup route to listen on /departments/add
 app.get("/departments/add", (req, res) => {
-     try {
+    try {
         res.render("addDepartment");
     } catch (rejectMsg) {
         res.render("addDepartment", {
@@ -212,8 +239,8 @@ app.get("/departments/add", (req, res) => {
     };
 });
 app.post("/departments/add", (req, res) => {
-     try {
-         dataService.addDepartment(req.body).then(() => {
+    try {
+        dataService.addDepartment(req.body).then(() => {
             res.redirect("/departments")
         });
     } catch (rejectMsg) {
@@ -232,7 +259,7 @@ app.post("/departments/update", (req, res) => {
     };
 });
 app.get("/department/:departmentNum", (req, res) => {
-     try {
+    try {
         dataService.getDepartmentById(req.params.id).then((data) => {
             res.render("department", {
                 data: data

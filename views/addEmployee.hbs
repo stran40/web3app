@@ -20,10 +20,10 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- row 2 -->
                     <div class="row">
-                       <div class="col-md-6">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input class="form-control" id="email" name="email" type="email" />
@@ -32,13 +32,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="ssn">Social Security Num:</label>
-                                <input class="form-control" id="ssn" name="ssn" type="text" disabled/>
+                                <input class="form-control" id="ssn" name="ssn" type="text"/>
                             </div>
                         </div>
                     </div>
                     <!-- row 3 -->
                     <div class="row">
-                       <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="addressStreet">Address (Street):</label>
                                 <input class="form-control" id="addressStreet" name="addressStreet" type="text" />
@@ -64,7 +64,8 @@
                         </div>
 
                     </div>
-                </fieldset> <!-- end of personal info fieldset -->
+                </fieldset>
+                <!-- end of personal info fieldset -->
                 <fieldset>
                     <legend>Company Information</legend>
                     <!-- row 1 -->
@@ -81,25 +82,24 @@
                                 <input class="form-control" id="employeeManagerNum" name="employeeManagerNum" type="text" />
                             </div>
                         </div>
-                         <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="status">Status:</label>
-                                <input type="radio" class="form-control" id="fullTimeStatus" name="status" value="Full Time" /> Full Time
-                                <input type="radio" class="form-control" id="partTimeStatus" name="status" value="Part Time" /> Part Time
+                                <input type="radio" class="form-control" id="fullTimeStatus" name="status" value="Full Time" />                                Full Time
+                                <input type="radio" class="form-control" id="partTimeStatus" name="status" value="Part Time" />                                Part Time
                             </div>
                         </div>
-                         <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="department">Department:</label>
+                                <label for="department">Department:</label> 
+                                {{#if departments}}
                                 <select class="form-control" name="department" id="department">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                </select>
+                                    {{#each departments}}
+                                    <option value="{{departmentId}}">{{departmentName}}</option>
+                                    {{/each}}
+                                    </select> {{else}}
+                                <div>No Departments</div>
+                                {{/if}}
                             </div>
                         </div>
                     </div>
