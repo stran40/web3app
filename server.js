@@ -116,39 +116,30 @@ app.get("/employees", (req, res) => {
 
 // add employees route
 app.get('/employees/add', function (req, res) {
-   try {
-       dataService.getDepartments().then((data) => {
-           console.log(chalk.yellow('getDepartments called.'));
-           res.render("addEmployee", {
-               departments: data
+    try {
+        dataService.getDepartments().then((data) => {
+            console.log(chalk.yellow('getDepartments called.'));
+            res.render("addEmployee", {
+                departments: data
             });
-       })
+        })
     } catch (rejectMsg) {
-        res.render("addEmployee", { title: "Add Employee" });
+        res.render("addEmployee", {
+            title: "Add Employee"
+        });
     };
 });
 
 app.post("/employees/add", (req, res) => {
-   try{
-    dataService.addEmployee(req.body).then(() => {
-    res.redirect("/employees")});
- }
- catch (rejectMsg) {
-        res.status(404).send("Could not add employee."); 
+    try {
+        dataService.addEmployee(req.body).then(() => {
+            res.redirect("/employees")
+        });
+    } catch (rejectMsg) {
+        res.status(404).send("Could not add employee.");
     };
 });
 
-app.get('/employees/:id', function (req, res) {
-    try {
-        dataService.getEmployeeByNum(req.params.id).then((data) => {
-            res.render("employee", {
-                data: data
-            });
-        })
-    } catch (rejectMsg) {
-        res.status(404).send("Employee Not Found");
-    };
-});
 app.get("/employee/:empNum", (req, res) => {
     // initialize an empty object to store the values
     let viewData = {};
@@ -170,18 +161,19 @@ app.get("/employee/:empNum", (req, res) => {
                 }
             }
         }).catch(() => {
+            console.log(chalk.red('departments set as empty array.'));
             viewData.departments = []; // set departments to empty if there was an error
         }).then(() => {
             if (viewData.data == null) { // if no employee - return an error
                 res.status(404).send("Employee Not Found");
             } else {
+                console.log(chalk.green('viewData = ' + JSON.stringify(viewData)));
+
                 res.render("employee", {
                     viewData: viewData
                 }); // render the "employee" view
             }
-        }).catch(() => {
-            reject();
-        })
+        });
 });
 
 app.post("/employee/update", (req, res) => {

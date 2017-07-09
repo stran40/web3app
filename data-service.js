@@ -34,6 +34,7 @@ var Employee = sequelize.define('Employee', {
     addresCity: Sequelize.STRING,
     addressState: Sequelize.STRING,
     addressPostal: Sequelize.STRING,
+    maritalStatus:Sequelize.STRING,
     isManager: Sequelize.BOOLEAN,
     employeeManagerNum: Sequelize.INTEGER,
     status: Sequelize.STRING,
@@ -72,22 +73,14 @@ getMessage = () => {
  * --------------------------------*/
 initialize = () => {
     return new Promise(function (resolve, reject) {
-        sequelize.sync().then(function () {
-
-            // create a new "Employee" table and add it to the database
-            Employee.create().then(function (employee) {
-                console.log(chalk.cyan("Worker model created."));
-            }).then(function () {
-                Department.create().then(function (employee) {
-                    console.log(chalk.cyan("Department model created."));
-                    resolve();
-                })
-            }).catch(function (error) {
-                console.log("Something went wrong with model creation.");
+        sequelize.sync()
+        .then(() => {
+            resolve();
+        })
+        .catch(function (error) {
+            console.log("Something went wrong with model creation.");
             });
-        });
     });
-
 }; // end of initialize();
 
 /*-----------------------------------
@@ -173,7 +166,7 @@ getEmployeesByManager = (manager) => {
 getEmployeeByNum = (num) => {
     return new Promise(function (resolve, reject) {
         sequelize.sync().then(function () {
-            Employee.findAll({
+            Employee.find({
                     where: {
                         employeeNum: num
                     }
@@ -214,8 +207,9 @@ getManagers = () => {
 getDepartments = () => {
     return new Promise(function (resolve, reject) {
         sequelize.sync().then(function () {
-            Department.findAll()
+            Department.findAll() 
                 .then(function (data) {
+                    console.log(chalk.yellow('getDepartments() ran.'));
                     resolve(data);
                 })
                 .catch(function (error) {
@@ -270,38 +264,40 @@ addEmployee = (employeeData) => {
  * --------------------------------*/
 updateEmployee = (employeeData) => {
     return new Promise(function (resolve, reject) {
-        employeeData.isManager = (employeeData.isManager) ? true : false;
-        // set blank values to null
-        for (var prop in Employee) {
-            if (prop == '')
-                prop = null;
-        };
-        // update Employee obj
-        Employee.update({
-            employeeNum: employeeData.employeeNum,
-            firstName: employeeData.firstName,
-            last_name: employeeData.last_name,
-            email: employeeData.email,
-            SSN: employeeData.SSN,
-            addressStreet: employeeData.addressStreet,
-            addresCity: employeeData.addresCity,
-            addressState: employeeData.addressState,
-            addressPostal: employeeData.addressPostal,
-            maritalStatus: employeeData.maritalStatus,
-            isManager: employeeData.isManager,
-            employeeManagerNum: employeeData.employeeManagerNum,
-            status: employeeData.status,
-            department: employeeData.department,
-            hireDate: employeeData.hireDate
-        }, {
-            where: {
-                id: employeeData.employeeNum
-            }
-        }).then(function (employee) {
-            console.log(chalk.yellow("Employee updated."));
-            resolve(data);
-        }).catch(function (error) {
-            console.log("unable to update employee.");
+        sequelize.sync().then(function (employeeData) {
+            employeeData.isManager = (employeeData.isManager) ? true : false;
+            // set blank values to null
+            for (var prop in Employee) {
+                if (prop == '')
+                    prop = null;
+            };
+            // update Employee obj
+            Employee.update({
+                employeeNum: employeeData.employeeNum,
+                firstName: employeeData.firstName,
+                last_name: employeeData.last_name,
+                email: employeeData.email,
+                SSN: employeeData.SSN,
+                addressStreet: employeeData.addressStreet,
+                addresCity: employeeData.addresCity,
+                addressState: employeeData.addressState,
+                addressPostal: employeeData.addressPostal,
+                maritalStatus: employeeData.maritalStatus,
+                isManager: employeeData.isManager,
+                employeeManagerNum: employeeData.employeeManagerNum,
+                status: employeeData.status,
+                department: employeeData.department,
+                hireDate: employeeData.hireDate
+            }, {
+                where: {
+                    id: employeeData.employeeNum
+                }
+            }).then(function (employee) {
+                console.log(chalk.yellow("Employee updated."));
+                resolve(data);
+            }).catch(function (error) {
+                console.log("unable to update employee.");
+            });
         });
     });
 };
