@@ -262,7 +262,7 @@ app.post("/departments/update", (req, res) => {
 app.get("/department/:id", (req, res) => {
     try {
         dataService.getDepartmentById(req.params.id).then((data) => {
-            console.log(chalk.yellow('departmentID: ' +req.params.id ));
+            console.log(chalk.yellow('departmentID: ' + req.params.id));
             res.render("department", {
                 data: data
             });
@@ -285,9 +285,37 @@ listen = () => {
     })
 };
 
+/*
+
 dataService.initialize()
     .then(listen)
     .catch(function (rejectMsg) {
         // catch any errors here
         console.log(rejectMsg);
+    });
+
+    */
+
+dataServiceComments.initialize()
+    .then(() => {
+        dataServiceComments.addComment({
+            authorName: "Comment 1 Author",
+            authorEmail: "comment1@mail.com",
+            subject: "Comment 1",
+            commentText: "Comment Text 1"
+        }).then((id) => {
+            dataServiceComments.addReply({
+                    comment_id: id,
+                    authorName: "Reply 1 Author",
+                    authorEmail: "reply1@mail.com",
+                    commentText: "Reply Text 1"
+                }).then(dataServiceComments.getAllComments)
+                .then((data) => {
+                    console.log("comment: " + data[data.length - 1]);
+                    process.exit();
+                });
+        });
+    }).catch((err) => {
+        console.log("Error: " + err);
+        process.exit();
     });
