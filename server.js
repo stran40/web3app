@@ -67,12 +67,43 @@ app.get("/", function (req, res) {
 // setup another route to listen on /about
 app.get("/about", function (req, res) {
     try {
-        res.render("about");
+        dataServiceComments.getAllComments().then((data) => {
+                res.render("about", {
+                    data: data,
+                    title: "Employees"
+                });
+            });
     } catch (rejectMsg) {
-        // catch any errors here
-        console.log(rejectMsg);
+        console.log(chalk.yellow(rejectMsg + "getAllComments did not work."));
+         res.render("about");
     };
 });
+
+app.post("/about/addComment", function (req, res) {
+    try {
+        dataServiceComments.addComment(req.body).then(() => {
+               res.redirect("/about")
+            });
+    } catch (rejectMsg) {
+        // catch any errors here
+        console.log(chalk.yellow(rejectMsg + "addComment did not work."));
+         res.redirect("/about");
+    };
+});
+
+app.post("/about/addReply", function (req, res) {
+    try {
+        dataServiceComments.addReply(req.body).then(() => {
+            res.redirect("/about")
+                });
+    } catch (rejectMsg) {
+        // catch any errors here
+        console.log(chalk.yellow(rejectMsg + "addReply did not work."));
+         res.redirect("/about");
+    };
+});
+
+
 
 // setup route to listen on /employees
 app.get("/employees", (req, res) => {
@@ -287,6 +318,7 @@ listen = () => {
 
 
 dataService.initialize()
+    .then(dataServiceComments.initialize)
     .then(listen)
     .catch(function (rejectMsg) {
         // catch any errors here

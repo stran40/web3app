@@ -6,9 +6,10 @@ var commentSchema = new Schema({
     "authorEmail": String,
     "subject": String,
     "postedDate": Date,
+    "commentText" : String,
     "replies": [{
         "comment_id": String,
-        "authorName:": String,
+        "authorName": String,
         "authorEmail": String,
         "commentText": String,
         "repliedDate": Date
@@ -32,7 +33,7 @@ module.exports.initialize = function () {
 
 module.exports.addComment = function (data) {
     return new Promise( function (resolve, reject) {
-        data.postedData = Date.now();
+        data.postedDate = Date.now();
         let newComment = new Comment(data);
         newComment.save( (err) => {
             if (err) {
@@ -47,11 +48,8 @@ module.exports.addComment = function (data) {
 
 module.exports.getAllComments = function () {
     return new Promise( function (resolve, reject) {
-       Comment.find({
-           sort: {
-                postedDate : 1
-           }
-       })
+       Comment.find({ })
+       .sort({postedDate : 1})
         .exec()
         .then((comments) => {
             resolve(comments)
@@ -63,13 +61,12 @@ module.exports.getAllComments = function () {
 };
 module.exports.addReply = function (data) {
     return new Promise( function (resolve, reject) {
-       data.repliedData = Date.now();
-       Comment.update({ _id : data.commentId },
-        { $addToSet: { replies: data } },
-        { multi: false })
+       data.repliedDate = Date.now();
+       Comment.update({ _id : data.comment_id  },
+        { $addToSet: { replies: data }})
         .exec()
-        .then((data) => {
-            resolve(data)
+        .then(() => {
+            resolve()
         })
         .catch((err) => {
             reject(err)
