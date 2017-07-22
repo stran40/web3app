@@ -32,13 +32,13 @@ module.exports.initialize = function () {
 
 module.exports.addComment = function (data) {
     return new Promise( function (resolve, reject) {
-        data.postedData = Data.now();
+        data.postedData = Date.now();
         let newComment = new Comment(data);
         newComment.save( (err) => {
             if (err) {
                 reject("There was an error saving the comment", err);
             } else {
-                console.log(chalk.yellow(newComment + " saved."));
+                console.log(newComment + " saved.");
                 resolve(newComment._id);
             }
         })
