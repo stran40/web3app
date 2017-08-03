@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const chalk = require('chalk');
 let Schema = mongoose.Schema;
 
 var userSchema = new Schema({
@@ -27,6 +28,28 @@ module.exports.initialize = function () {
 // registerUser(userData); 
 module.exports.registerUser(userData) = function () {
     return new Promise(function (resolve, reject) {
-        
+        // compare passwords
+        if !( userData.password == userData.password2 ){
+            reject('Passwords do not match');
+        } else if ( userData.password == userData.password2 ){
+            // passwords match, create user
+            let newUser = new User(userData);
+            newUser.save((err)) => {
+                if(err){
+                    // duplicate key 
+                    if (err.code == 11000) {
+                        reject('User Name already taken');
+                    } else  {
+                        reject('There was an error creating the user: ', err );
+                    }
+                    // no error
+                } else {
+                    console.log(chalk.yellow(newUser));
+                    resolve();
+                }
+            }
+        }
     });
 };
+
+
