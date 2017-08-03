@@ -18,6 +18,7 @@ const fs = require("fs");
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const clientSessions = require('client-sessions');
+const dataServiceAuth = require('./data-service-auth.js');
 const chalk = require("chalk");
 
 const HTTP_PORT = process.env.PORT || 8080;
@@ -225,7 +226,7 @@ app.get('/employees/add',  ensureLogin, (req, res) => {
     };
 });
 
-app.post("/employees/add", (req, res) => {
+app.post("/employees/add", ensureLogin, (req, res) => {
     try {
         dataService.addEmployee(req.body).then(() => {
             res.redirect("/employees")
@@ -235,7 +236,7 @@ app.post("/employees/add", (req, res) => {
     };
 });
 
-app.get("/employee/:empNum", (req, res) => {
+app.get("/employee/:empNum", ensureLogin, (req, res) => {
     // initialize an empty object to store the values
     let viewData = {};
     dataService.getEmployeeByNum(req.params.empNum)
@@ -269,7 +270,7 @@ app.get("/employee/:empNum", (req, res) => {
         });
 });
 
-app.post("/employee/update", (req, res) => {
+app.post("/employee/update", ensureLogin, (req, res) => {
     try {
         dataService.updateEmployee(req.body).then(() => {
             res.redirect("/employees")
@@ -280,7 +281,7 @@ app.post("/employee/update", (req, res) => {
     };
 });
 
-app.get("/employee/delete/:empNum", (req, res) => {
+app.get("/employee/delete/:empNum", ensureLogin, (req, res) => {
     try {
         dataService.deleteEmployeeByNum(req.params.empNum).then(() => {
             res.redirect("/employees");
@@ -291,7 +292,7 @@ app.get("/employee/delete/:empNum", (req, res) => {
 });
 
 // setup route to listen on /managers
-app.get("/managers", (req, res) => {
+app.get("/managers", ensureLogin, (req, res) => {
     try {
         dataService.getManagers().then((data) => {
             res.render("employeeList", {
@@ -308,7 +309,7 @@ app.get("/managers", (req, res) => {
 });
 
 // setup route to listen on /departments
-app.get("/departments", (req, res) => {
+app.get("/departments",ensureLogin, (req, res) => {
     try {
         dataService.getDepartments().then((data) => {
             res.render("departmentList", {
@@ -324,7 +325,7 @@ app.get("/departments", (req, res) => {
     };
 });
 // setup route to listen on /departments/add
-app.get("/departments/add", (req, res) => {
+app.get("/departments/add",ensureLogin, (req, res) => {
     try {
         res.render("addDepartment");
     } catch (rejectMsg) {
@@ -333,7 +334,7 @@ app.get("/departments/add", (req, res) => {
         });
     };
 });
-app.post("/departments/add", (req, res) => {
+app.post("/departments/add", ensureLogin, (req, res) => {
     try {
         dataService.addDepartment(req.body).then(() => {
             res.redirect("/departments")
@@ -343,7 +344,7 @@ app.post("/departments/add", (req, res) => {
         console.log(rejectMsg);
     };
 });
-app.post("/departments/update", (req, res) => {
+app.post("/departments/update", ensureLogin, (req, res) => {
     try {
         dataService.updateDepartment(req.body).then(() => {
             res.redirect("/departments")
@@ -353,7 +354,7 @@ app.post("/departments/update", (req, res) => {
         console.log(rejectMsg);
     };
 });
-app.get("/department/:id", (req, res) => {
+app.get("/department/:id", ensureLogin, (req, res) => {
     try {
         dataService.getDepartmentById(req.params.id).then((data) => {
             console.log(chalk.yellow('departmentID: ' + req.params.id));
