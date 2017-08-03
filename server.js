@@ -1,10 +1,10 @@
 /*********************************************************************************
- * WEB322 – Assignment 06
+ * WEB322 – Assignment 07
  * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
  * of this assignment has been copied manually or electronically from any other source
  * (including 3rd party web sites) or distributed to other students.
  *
- * Name: Stephanie Tran Student ID: 132233162 Date: July 22 2017
+ * Name: Stephanie Tran Student ID: 132233162 Date: August 4th 2017
  *
  * Online (Heroku) Link:https://fierce-headland-81020.herokuapp.com/
  *
@@ -17,7 +17,7 @@ const dataServiceComments = require("./data-service-comments.js");
 const fs = require("fs");
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
-
+const clientSessions = require('client-sessions');
 const chalk = require("chalk");
 
 const HTTP_PORT = process.env.PORT || 8080;
@@ -54,10 +54,73 @@ app.engine(".hbs", exphbs({
 }));
 app.set("view engine", ".hbs");
 
+// Setup client-sessions
+app.use(clientSessions({
+  cookieName: "session", // this is the object name that will be added to 'req'
+  secret: "week10example_web322", // this should be a long un-guessable string.
+  duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
+  activeDuration: 1000 * 60 // the session will be extended by this many ms each request (1 minute)
+}));
+
+// custom middleware function to ensure templates will have access to "session" object
+app.use(function(req, res, next) {
+res.locals.session = req.session;
+next();
+});
+// Parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get("/login", function(req, res) {
+  res.render("login", { });
+});
+
+// The login route that adds the user to the session
+app.post("/login", (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  if(username === "" || password === "") {
+    // Render 'missing credentials'
+    return res.render("login", { errorMsg: "Missing credentials." });
+  }
+
+  // use sample "user" (declared above)
+  if(username === user.username && password === user.password){
+    
+    // Add the user on the session and redirect them to the dashboard page.
+    req.session.user = {
+      username: user.username,
+      email: user.email
+    };
+    
+    res.redirect("/dashboard");
+  } else {
+    // render 'invalid username or password'
+    res.render("login", { errorMsg: "invalid username or password!"});
+  }
+});
+function ensureLogin(req, res, next) {
+  if (!req.session.user) {
+    res.redirect("/login");
+  } else {
+    next();
+  }
+}
+// An authenticated route that requires the user to be logged in.
+app.get("/dashboard", ensureLogin, (req, res) => {
+  res.render("dashboard", {user: req.session.user});
+});
+// Log a user out by destroying their session
+// and redirecting them to /login
+app.get("/logout", function(req, res) {
+  req.session.reset();
+  res.redirect("/login");
+});
+
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function (req, res) {
     try {
-        res.render("home");
+        res.redirect("/login");
     } catch (rejectMsg) {
         // catch any errors here
         console.log(rejectMsg);
@@ -106,7 +169,7 @@ app.post("/about/addReply", function (req, res) {
 
 
 // setup route to listen on /employees
-app.get("/employees", (req, res) => {
+app.get("/employees",  ensureLogin, (req, res) => {
     try {
         if (req.query.status) {
             dataService.getEmployeesByStatus(req.query.status).then((data) => {
@@ -147,7 +210,7 @@ app.get("/employees", (req, res) => {
 });
 
 // add employees route
-app.get('/employees/add', function (req, res) {
+app.get('/employees/add',  ensureLogin, (req, res) => {
     try {
         dataService.getDepartments().then((data) => {
             console.log(chalk.yellow('getDepartments called.'));
