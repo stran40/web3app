@@ -52,4 +52,15 @@ module.exports.registerUser(userData) = function () {
     });
 };
 
-
+//  checkUser(userData)
+module.exports.checkUser(userData) = function () {
+    return new Promise(function (resolve, reject) {
+        User.find({ user: userData.user})
+        .then(()=>{
+            if (users == 0) {
+                reject('Unable to find user: ' + userData.user);
+            }
+        })
+        
+    });
+};
