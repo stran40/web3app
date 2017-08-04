@@ -1,4 +1,4 @@
-{{#if !successMessage}}
+{{#unless successMessage}}
 
 
 <div class="row">
@@ -28,15 +28,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <input class="form-control" id="password2" name="password2" type="password" placeholder="Confirm Password" required />
+                  <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input class="form-control" id="password2" name="password2" type="password" placeholder="Confirm Password" required />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
-        </div>
+    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary pull-right">&nbsp;&nbsp;&nbsp;Register&nbsp;&nbsp;&nbsp;</button><br/><br />
+                        </div>
+                    </div>
+                </form>
+            </div>
     </div>
 </div>
-{{/if}}
+	</div>
+{{/unless}}
