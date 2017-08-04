@@ -94,10 +94,11 @@ app.get("/register", function (req, res) {
 
 app.post("/register", function (req, res) {
      try {
-        dataService.RegisterUser(req.body).then(() => {
-            res.render("register", {successMessage: "User created"});
-        });
-    } catch (rejectMsg) {
+        dataServiceAuth.registerUser(req.body)
+        .then(() => {
+            res.render("register", {successMsg: "User created"});
+        })
+    } catch (err) {
         res.render("register", {errorMsg: err, user: req.body.user});
     };
 });
@@ -105,7 +106,7 @@ app.post("/register", function (req, res) {
 
 // The login route that adds the user to the session
 app.post("/login", (req, res) => {
-    if (username === "" || password === "") {
+    if (req.body.user === "" || req.body.password === "") {
         // Render 'missing credentials'
         return res.render("login", {
             errorMsg: "Missing credentials."
@@ -113,7 +114,7 @@ app.post("/login", (req, res) => {
     }
     
     try {
-        dataService.CheckUser(req.body) 
+        dataServiceAuth.checkUser(req.body) 
         .then(() => {
             // Add the user on the session and redirect them to the dashboard page.
             req.session.user = {
@@ -122,7 +123,7 @@ app.post("/login", (req, res) => {
             res.redirect("/employees");
         })
     } catch (rejectMsg){
-        res.render("login", {errorMsg: err, user: req.body.user});
+        res.render("/login", {errorMsg: rejectMsg, user: req.body.user});
     }
 });
 
@@ -411,7 +412,7 @@ listen = () => {
 
 dataService.initialize()
     .then(dataServiceComments.initialize)
-    // add dataServiceAuth.initialize to the chain here
+    .then(dataServiceAuth.initialize)
     .then(() => {
         app.listen(HTTP_PORT, onHttpStart);
     })

@@ -55,7 +55,8 @@ registerUser = (userData) => {
 checkUser = (userData) => {
     return new Promise(function (resolve, reject) {
         User.find({ user: userData.user})
-        .then(()=>{
+        .exec()
+        .then((users)=>{
             if (users == 0) {
                 reject('Unable to find user: ' + userData.user);
             }
@@ -67,7 +68,7 @@ checkUser = (userData) => {
             }
         })
         .catch( (err) => {
-            reject("Unable to find user: " + user);
+            reject("Unable to find user: " + userData.user);
         });
     })
 };
