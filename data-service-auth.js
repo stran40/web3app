@@ -7,13 +7,12 @@ var userSchema = new Schema({
         "type" : String,
         "unique" : true
     }, "password": String
-    }]
 });
 
 let User; // to be defined on new connection
 
 // initialize();
-module.exports.initialize = function () {
+initialize = () => {
     return new Promise(function (resolve, reject) {
         let db = mongoose.createConnection("mongodb://web322:senecalab7@ds137749.mlab.com:37749/web322_a7");
         db.on('error', (err) => {
@@ -26,15 +25,15 @@ module.exports.initialize = function () {
     });
 };
 // registerUser(userData); 
-module.exports.registerUser(userData) = function () {
+registerUser = (userData) => {
     return new Promise(function (resolve, reject) {
         // compare passwords
-        if !( userData.password == userData.password2 ){
+        if ( userData.password !== userData.password2 ){
             reject('Passwords do not match');
         } else if ( userData.password == userData.password2 ){
             // passwords match, create user
             let newUser = new User(userData);
-            newUser.save((err)) => {
+            newUser.save((err) => {
                 if(err){
                     // duplicate key 
                     if (err.code == 11000) {
@@ -47,28 +46,34 @@ module.exports.registerUser(userData) = function () {
                     console.log(chalk.yellow(newUser));
                     resolve();
                 }
-            }
+            })
         }
     });
 };
 
 //  checkUser(userData)
-module.exports.checkUser(userData) = function () {
+checkUser = (userData) => {
     return new Promise(function (resolve, reject) {
         User.find({ user: userData.user})
         .then(()=>{
             if (users == 0) {
                 reject('Unable to find user: ' + userData.user);
             }
-            else if !(users[0].password == userData.password){
+            else if (users[0].password !== userData.password){
                 reject("Incorrect Password for user: " + user);
             }
             else if (users[0].password == userData.password){
                 resolve();
             }
         })
-        .catch(err){
+        .catch( (err) => {
             reject("Unable to find user: " + user);
-        }
-    });
+        });
+    })
 };
+
+module.exports = {
+    initialize: initialize,
+    checkUser: checkUser,
+    registerUser: registerUser
+}
