@@ -95,10 +95,10 @@ app.get("/register", function (req, res) {
 app.post("/register", function (req, res) {
      try {
         dataService.RegisterUser(req.body).then(() => {
-            res.render("register", {{successMessage: "User created"}});
+            res.render("register", {successMessage: "User created"});
         });
     } catch (rejectMsg) {
-        res.render("register", {{errorMsg: err, user: req.body.user}});
+        res.render("register", {errorMsg: err, user: req.body.user});
     };
 });
 
@@ -122,7 +122,7 @@ app.post("/login", (req, res) => {
             res.redirect("/employees");
         })
     } catch (rejectMsg){
-        res.render("login", {{errorMsg: err, user: req.body.user}});
+        res.render("login", {errorMsg: err, user: req.body.user});
     }
 });
 
