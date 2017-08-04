@@ -35,7 +35,6 @@ app.use(bodyParser.urlencoded({
 }));
 
 // setup bodyParser middleware
-// handle .hbs extensions 
 // add custom Handlebars helper 'equal'
 // set global defacult layout to layout.hbs
 app.engine(".hbs", exphbs({
@@ -53,69 +52,98 @@ app.engine(".hbs", exphbs({
         }
     }
 }));
+
 app.set("view engine", ".hbs");
 
 // Setup client-sessions
 app.use(clientSessions({
-  cookieName: "session", // this is the object name that will be added to 'req'
-  secret: "week10example_web322", // this should be a long un-guessable string.
-  duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
-  activeDuration: 1000 * 60 // the session will be extended by this many ms each request (1 minute)
+    cookieName: "session", 
+    secret: "week10example_web322", 
+    duration: 2 * 60 * 1000, 
+    activeDuration: 1000 * 60 //(1 minute)
 }));
 
 // custom middleware function to ensure templates will have access to "session" object
-app.use(function(req, res, next) {
-res.locals.session = req.session;
-next();
+app.use(function (req, res, next) {
+    res.locals.session = req.session;
+    next();
 });
-// Parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/login", function(req, res) {
-  res.render("login", { });
+// Parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+
+app.get("/login", function (req, res) {
+     try {
+        res.render("login");
+    } catch (rejectMsg) {
+        console.log(chalk.yellow(rejectMsg + 'app.get("/login")'));
+         res.status(404).send("Page Not Found!");
+    };
 });
+
+app.get("/register", function (req, res) {
+     try {
+        res.render("register");
+    } catch (rejectMsg) {
+        console.log(chalk.yellow(rejectMsg + 'app.get("/register")'));
+         res.status(404).send("Page Not Found!");
+    };
+});
+
+app.post("/register", function (req, res) {
+     try {
+        dataService.RegisterUser(req.body).then(() => {
+            res.render("register", {{successMessage: "User created"}});
+        });
+    } catch (rejectMsg) {
+        res.render("register", {{errorMsg: err, user: req.body.user}});
+    };
+});
+
 
 // The login route that adds the user to the session
 app.post("/login", (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  if(username === "" || password === "") {
-    // Render 'missing credentials'
-    return res.render("login", { errorMsg: "Missing credentials." });
-  }
-
-  // use sample "user" (declared above)
-  if(username === user.username && password === user.password){
+    if (username === "" || password === "") {
+        // Render 'missing credentials'
+        return res.render("login", {
+            errorMsg: "Missing credentials."
+        });
+    }
     
-    // Add the user on the session and redirect them to the dashboard page.
-    req.session.user = {
-      username: user.username,
-      email: user.email
-    };
-    
-    res.redirect("/dashboard");
-  } else {
-    // render 'invalid username or password'
-    res.render("login", { errorMsg: "invalid username or password!"});
-  }
+    try {
+        dataService.CheckUser(req.body) 
+        .then(() => {
+            // Add the user on the session and redirect them to the dashboard page.
+            req.session.user = {
+                username: req.body.user
+            };
+            res.redirect("/employees");
+        })
+    } catch (rejectMsg){
+        res.render("login", {{errorMsg: err, user: req.body.user}});
+    }
 });
+
 function ensureLogin(req, res, next) {
-  if (!req.session.user) {
-    res.redirect("/login");
-  } else {
-    next();
-  }
+    if (!req.session.user) {
+        res.redirect("/login");
+    } else {
+        next();
+    }
 }
 // An authenticated route that requires the user to be logged in.
 app.get("/dashboard", ensureLogin, (req, res) => {
-  res.render("dashboard", {user: req.session.user});
+    res.render("dashboard", {
+        user: req.session.user
+    });
 });
 // Log a user out by destroying their session
 // and redirecting them to /login
-app.get("/logout", function(req, res) {
-  req.session.reset();
-  res.redirect("/login");
+app.get("/logout", function (req, res) {
+    req.session.reset();
+    res.redirect("/login");
 });
 
 // setup a 'route' to listen on the default url path (http://localhost)
@@ -132,26 +160,26 @@ app.get("/", function (req, res) {
 app.get("/about", function (req, res) {
     try {
         dataServiceComments.getAllComments().then((data) => {
-                res.render("about", {
-                    data: data,
-                    title: "Employees"
-                });
+            res.render("about", {
+                data: data,
+                title: "Employees"
             });
+        });
     } catch (rejectMsg) {
         console.log(chalk.yellow(rejectMsg + "getAllComments did not work."));
-         res.render("about");
+        res.render("about");
     };
 });
 
 app.post("/about/addComment", function (req, res) {
     try {
         dataServiceComments.addComment(req.body).then(() => {
-               res.redirect("/about")
-            });
+            res.redirect("/about")
+        });
     } catch (rejectMsg) {
         // catch any errors here
         console.log(chalk.yellow(rejectMsg + "addComment did not work."));
-         res.redirect("/about");
+        res.redirect("/about");
     };
 });
 
@@ -159,18 +187,18 @@ app.post("/about/addReply", function (req, res) {
     try {
         dataServiceComments.addReply(req.body).then(() => {
             res.redirect("/about")
-                });
+        });
     } catch (rejectMsg) {
         // catch any errors here
         console.log(chalk.yellow(rejectMsg + "addReply did not work."));
-         res.redirect("/about");
+        res.redirect("/about");
     };
 });
 
 
 
 // setup route to listen on /employees
-app.get("/employees",  ensureLogin, (req, res) => {
+app.get("/employees", ensureLogin, (req, res) => {
     try {
         if (req.query.status) {
             dataService.getEmployeesByStatus(req.query.status).then((data) => {
@@ -211,7 +239,7 @@ app.get("/employees",  ensureLogin, (req, res) => {
 });
 
 // add employees route
-app.get('/employees/add',  ensureLogin, (req, res) => {
+app.get('/employees/add', ensureLogin, (req, res) => {
     try {
         dataService.getDepartments().then((data) => {
             console.log(chalk.yellow('getDepartments called.'));
@@ -309,7 +337,7 @@ app.get("/managers", ensureLogin, (req, res) => {
 });
 
 // setup route to listen on /departments
-app.get("/departments",ensureLogin, (req, res) => {
+app.get("/departments", ensureLogin, (req, res) => {
     try {
         dataService.getDepartments().then((data) => {
             res.render("departmentList", {
@@ -325,7 +353,7 @@ app.get("/departments",ensureLogin, (req, res) => {
     };
 });
 // setup route to listen on /departments/add
-app.get("/departments/add",ensureLogin, (req, res) => {
+app.get("/departments/add", ensureLogin, (req, res) => {
     try {
         res.render("addDepartment");
     } catch (rejectMsg) {
@@ -383,8 +411,10 @@ listen = () => {
 
 dataService.initialize()
     .then(dataServiceComments.initialize)
-    .then(listen)
-    .catch(function (rejectMsg) {
-        // catch any errors here
-        console.log(rejectMsg);
+    // add dataServiceAuth.initialize to the chain here
+    .then(() => {
+        app.listen(HTTP_PORT, onHttpStart);
+    })
+    .catch((err) => {
+        console.log("unable to start the server: " + err);
     });

@@ -60,7 +60,15 @@ module.exports.checkUser(userData) = function () {
             if (users == 0) {
                 reject('Unable to find user: ' + userData.user);
             }
+            else if !(users[0].password == userData.password){
+                reject("Incorrect Password for user: " + user);
+            }
+            else if (users[0].password == userData.password){
+                resolve();
+            }
         })
-        
+        .catch(err){
+            reject("Unable to find user: " + user);
+        }
     });
 };
