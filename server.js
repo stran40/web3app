@@ -1,10 +1,10 @@
 /*********************************************************************************
- * WEB322 – Assignment 07
+ * WEB322 – Assignment 08
  * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
  * of this assignment has been copied manually or electronically from any other source
  * (including 3rd party web sites) or distributed to other students.
  *
- * Name: Stephanie Tran Student ID: 132233162 Date: August 4th 2017
+ * Name: Stephanie Tran Student ID: 132233162 Date: August 12th 2017
  *
  * Online (Heroku) Link:https://fierce-headland-81020.herokuapp.com/
  *

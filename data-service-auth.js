@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const chalk = require('chalk');
+const bcrypt = require('bcryptjs');
 let Schema = mongoose.Schema;
 
 var userSchema = new Schema({
