@@ -33,7 +33,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
+app.use(bodyParser.json());
 // setup bodyParser middleware
 // add custom Handlebars helper 'equal'
 // set global defacult layout to layout.hbs
@@ -68,11 +68,17 @@ app.use(function (req, res, next) {
     res.locals.session = req.session;
     next();
 });
-
-// Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+app.post("/api/updatePassword", function (req, res) {
+        dataServiceAuth.checkUser({ user: req.body.user, password: req.body.currentPassword })
+        .then(dataServiceAuth.updatePassword(req.body))
+        .then( {successMessage: "Password changed successfully for user: " + req.body.user}  )
+        .catch((err) => {
+         {errorMessage: err} 
+     });
+});
 
 app.get("/login", function (req, res) {
      try {

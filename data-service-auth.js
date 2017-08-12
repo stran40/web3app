@@ -4,10 +4,11 @@ const bcrypt = require('bcryptjs');
 let Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-    "user":  {
-        "type" : String,
-        "unique" : true
-    }, "password": String
+    "user": {
+        "type": String,
+        "unique": true
+    },
+    "password": String
 });
 
 let User; // to be defined on new connection
@@ -28,26 +29,36 @@ initialize = () => {
 // registerUser(userData); 
 registerUser = (userData) => {
     return new Promise(function (resolve, reject) {
-        // compare passwords
-        if ( userData.password !== userData.password2 ){
-            reject('Passwords do not match');
-        } else if ( userData.password == userData.password2 ){
-            // passwords match, create user
-            let newUser = new User(userData);
-            newUser.save((err) => {
-                if(err){
-                    // duplicate key 
-                    if (err.code == 11000) {
-                        reject('User Name already taken');
-                    } else  {
-                        reject('There was an error creating the user: ', err );
-                    }
-                    // no error
-                } else {
-                    console.log(chalk.yellow(newUser));
-                    resolve();
-                }
-            })
+            // compare passwords
+            if (userData.password !== userData.password2) {
+                reject('Passwords do not match');
+            }
+            try {
+                // passwords match, create user
+                let newUser = new User(userData);
+                bcrypt.genSalt(10, function (err, salt) { // Generate a "salt" using 10 rounds
+                    if (err) throw err;
+                    bcrypt.hash(userData.password, salt, function (err, hash) { // encrypt password
+                       if (err) throw err;
+                       newUser.password = hash;
+                        newUser.save((err) => {
+                            if (err) {
+                                // duplicate key 
+                                if (err.code == 11000) {
+                                    reject('User Name already taken');
+                                } else {
+                                    reject('There was an error creating the user: ', err);
+                                }
+                                // no error
+                            } else {
+                                console.log(chalk.yellow(newUser));
+                                resolve();
+                            }
+                        })  
+                    });
+                });
+        } catch (err) {
+            reject( "There was an error encrypting the password");
         }
     });
 };
@@ -55,27 +66,43 @@ registerUser = (userData) => {
 //  checkUser(userData)
 checkUser = (userData) => {
     return new Promise(function (resolve, reject) {
-        User.find({ user: userData.user})
-        .exec()
-        .then((users)=>{
-            if (users == 0) {
-                reject('Unable to find user: ' + userData.user);
-            }
-            else if (users[0].password !== userData.password){
-                reject("Incorrect Password for user: " + user);
-            }
-            else if (users[0].password == userData.password){
-                resolve();
-            }
-        })
-        .catch( (err) => {
-            reject("Unable to find user: " + userData.user);
-        });
+        User.find({
+                user: userData.user
+            })
+            .exec()
+            .then((users) => {
+                if (users == 0) {
+                    reject('Unable to find user: ' + userData.user);
+                }
+                else{
+                    bcrypt.genSalt(10, function (err, salt) { 
+                        if (err) throw err;
+                        bcrypt.hash(userData.password, salt, function (err, hash) { // encrypt password
+                        if (err) throw err;
+                            bcrypt.compare(userData.password, hash).then((res) => {
+                                resolve(); 
+                                });
+                        })
+                    })
+                }
+            })
+            .catch((err) => {
+                reject("Unable to find user: " + userData.user);
+            });
     })
 };
 
+updatePassword = (userData) => {
+    User.update({ user: userData.user },
+    { $set: { password: hash } },
+    { multi: false })
+    .exec()
+    .then( resolve() )
+    .catch( reject( "There was an error updating the password for " + userData.user ) );
+}
 module.exports = {
     initialize: initialize,
     checkUser: checkUser,
-    registerUser: registerUser
+    registerUser: registerUser,
+    updatePassword: updatePassword
 }
